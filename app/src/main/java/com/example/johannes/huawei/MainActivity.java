@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         textPrediction = (TextView) findViewById(R.id.textPrediction);
         buttonPredictScene = (Button) findViewById(R.id.buttonPredictScene);
+        buttonPredictScene.setText("Predict");
 
         mMyHandlerThread = new MyHandlerThread();
         mMyHandlerThread.start();
