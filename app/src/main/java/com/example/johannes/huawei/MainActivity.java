@@ -3,6 +3,7 @@ package com.example.johannes.huawei;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,11 +26,14 @@ import com.huawei.hiai.vision.visionkit.image.detector.Scene;
 
 import org.json.JSONObject;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
     private TextView textPrediction;
     private Button buttonPredictScene;
+    private ImageView imageLoad;
     private Handler mMyHandler = null;
     private MyHandlerThread mMyHandlerThread = null;
     private Bitmap bitmap;
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         textPrediction = (TextView) findViewById(R.id.textPrediction);
         buttonPredictScene = (Button) findViewById(R.id.buttonPredictScene);
         buttonPredictScene.setText("Predict");
+        imageLoad = (ImageView) findViewById (R.id.imageLoad);
 
         mMyHandlerThread = new MyHandlerThread();
         mMyHandlerThread.start();
@@ -116,9 +122,19 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean handleMessage(Message arg0) {
-            String path = "C:\\Users\\Johannes\\Desktop\\Korsika 2018\\20180918_125913.jpg";
+            String path = "DCIM\\01";
+            String imageName = "20180918_125913.jpg";
+            File dataDir = Environment.getDataDirectory(); //data
+            File image = new File(dataDir+path, imageName);
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            //Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
+
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.strand_hd);
+            //imageLoad.setImageBitmap(bitmap);
+            imageLoad.setImageResource(R.drawable.strand_hd);
+
+            //Bitmap bitmap = BitmapFactory.decodeFile(path);
             Frame frame = new Frame();
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
             frame.setBitmap(bitmap);
             switch (arg0.what) {
                 case MSG_SCENE: //scene detect
