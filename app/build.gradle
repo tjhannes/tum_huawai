@@ -15,6 +15,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

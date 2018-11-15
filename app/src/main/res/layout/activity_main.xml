@@ -32,35 +32,55 @@
 
     <Button
         android:id="@+id/buttonPredictScene"
-        android:layout_width="364dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="350dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="8dp"
         android:text="Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/message" />
 
-    <TextView
-        android:id="@+id/textPrediction"
-        android:layout_width="358dp"
-        android:layout_height="31dp"
-        android:layout_marginStart="24dp"
+    <Button
+        android:id="@+id/buttonCamera"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
-        android:textAlignment="center"
+        android:layout_marginEnd="8dp"
+        android:text="Button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonPredictScene" />
 
-    <ImageView
-        android:id="@+id/imageLoad"
-        android:layout_width="188dp"
-        android:layout_height="159dp"
+    <TextView
+        android:id="@+id/textPrediction"
+        android:layout_width="304dp"
+        android:layout_height="95dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="8dp"
+        android:text="TextView"
+        android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textPrediction"
+        app:layout_constraintTop_toBottomOf="@+id/imageLoad"
+        app:layout_constraintVertical_bias="0.354" />
+
+    <ImageView
+        android:id="@+id/imageLoad"
+        android:layout_width="185dp"
+        android:layout_height="105dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCamera"
         app:srcCompat="@drawable/ic_launcher_background" />
+
+
 
 </android.support.constraint.ConstraintLayout>
