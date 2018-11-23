@@ -40,6 +40,14 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+/*
+*
+* Lädt per Intent ein aufgenommes Bild in das Bitmap.
+* Schickt das Bitmap als Frame an HiAI API. Return ein JsonObject mit einem von 14 möglichen Scenes.
+* Nutzt dabei Threads um die Anfrage parallel zu Bearbeiten
+*
+* */
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
@@ -67,10 +75,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int MSG_SCENE = 1;
     public static final int MSG_SHOW_RESULT_SCENE = 11;
 
-    private String getSceneString(int type) {
-        return sceneStringArr[type];
-    }
-
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -82,11 +86,13 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText(R.string.title_dashboard);
-                    Intent intent = new Intent(MainActivity.this, VoiceRecActivity.class);
-                    startActivity(intent);
+                    Intent intentCameraActivity = new Intent(MainActivity.this, CameraActivity.class);
+                    startActivity(intentCameraActivity);
                     return true;
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_notifications);
+                    Intent intentFoundationActivity = new Intent(MainActivity.this, FoundationActivity.class);
+                    startActivity(intentFoundationActivity);
                     return true;
             }
             return false;

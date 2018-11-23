@@ -3,4 +3,6 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <!-- used by Camera.java (tf lite) -->
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
 </resources>
