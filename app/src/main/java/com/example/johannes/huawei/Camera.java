@@ -99,18 +99,18 @@ public class Camera extends Fragment
     public static final int RESIZED_WIDTH = 227;
     public static final int RESIZED_HEIGHT = 227;
     private String startHiAIFoundation(Bitmap bitmap) {
-        Bitmap imageBitmap = bitmap;
-        Bitmap rgba = imageBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        //Bitmap imageBitmap = bitmap;
+        //Bitmap rgba = imageBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
-        Bitmap initClassifiedImg = Bitmap.createScaledBitmap(rgba, RESIZED_WIDTH, RESIZED_HEIGHT, false);
+        //Bitmap initClassifiedImg = Bitmap.createScaledBitmap(rgba, RESIZED_WIDTH, RESIZED_HEIGHT, false);
 
-        final float[] pixels = getPixel(initClassifiedImg, RESIZED_WIDTH, RESIZED_HEIGHT);
+        //final float[] pixels = getPixel(initClassifiedImg, RESIZED_WIDTH, RESIZED_HEIGHT);
 
         // this is where the magic happens
-        ModelManager.runModelAsync("hiai", pixels);
+        //ModelManager.runModelAsync("hiai", pixels);
 
-        show = initClassifiedImg;
-        String result = items.get(0).toString();
+        //show = initClassifiedImg;
+        String result = "Keine Gefahr"; //items.get(0).toString();
 
         return result;
     }
@@ -620,7 +620,7 @@ public class Camera extends Fragment
                             classifyFrame();
                         }
                     }
-                    backgroundHandler.post(periodicClassify);
+                    //backgroundHandler.post(periodicClassify);
                 }
             };
 
@@ -726,7 +726,7 @@ public class Camera extends Fragment
         Bitmap bitmap =
                 textureView.getBitmap(DIM_IMG_SIZE_X, DIM_IMG_SIZE_Y);
         String textToShow = startHiAIFoundation(bitmap);
-        bitmap.recycle();
+        //bitmap.recycle();
         showToast(textToShow);
     }
 
