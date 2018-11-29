@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText(R.string.title_dashboard);
-                    Intent intentCameraActivity = new Intent(MainActivity.this, CameraActivity.class);
+                    Intent intentCameraActivity = new Intent(MainActivity.this, NeuralNetActivity.class);
                     startActivity(intentCameraActivity);
                     return true;
                 case R.id.navigation_notifications:
@@ -98,6 +98,16 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    public void startNN(View view) {
+
+        // launch neural net activity
+        Intent intent = new Intent(this, NeuralNetActivity.class);
+
+        Log.d(LOG_TAG, "Start neural net");
+
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
