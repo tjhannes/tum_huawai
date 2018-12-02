@@ -109,6 +109,18 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void startHiAIFoundation(View view) {
+
+        // launch neural net activity
+        Intent intent = new Intent(this, SyncInOneActivity.class);
+
+        Log.d(LOG_TAG, "Start HiAI Foundation");
+
+        startActivity(intent);
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

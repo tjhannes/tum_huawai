@@ -47,6 +47,12 @@
             android:label="NN">
         </activity>
 
+        <activity
+            android:name=".SyncInOneActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="SIO">
+        </activity>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.johannes.huawei.fileprovider"

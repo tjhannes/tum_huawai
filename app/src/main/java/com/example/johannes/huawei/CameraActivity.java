@@ -72,6 +72,8 @@ public class CameraActivity extends AppCompatActivity {
 
                     // show bitmap
                     items.add(new ClassifyItemModel(output[0], output[1], output[2], show));
+                    String result = output[0];
+                    mTextMessage.setText(result);
 
                     //adapter.notifyDataSetChanged();
                 }
@@ -114,6 +116,9 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        mTextMessage = (TextView) findViewById(R.id.mTextMessage);
+        mTextMessage.setText("Init");
 
         /** load libhiai.so */
         boolean isSoLoadSuccess = ModelManager.init();

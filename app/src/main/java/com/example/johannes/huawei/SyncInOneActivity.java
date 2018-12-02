@@ -1,20 +1,36 @@
-/* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
-
 package com.example.johannes.huawei;
 
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.support.v13.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -73,12 +89,16 @@ import static android.graphics.Color.blue;
 import static android.graphics.Color.green;
 import static android.graphics.Color.red;
 
-/** Basic fragments for the Camera. */
-public class Camera extends Fragment
-        implements FragmentCompat.OnRequestPermissionsResultCallback {
 
-    //** Tag for the {@link Log}. *//*
-    private static final String TAG = "Camera";
+
+public class SyncInOneActivity extends AppCompatActivity {
+
+    private static final String TAG = "SyncActivity";
+
+    private TextView mTextMessage;
+    private List<ClassifyItemModel> items;
+    private Bitmap show;
+    private AssetManager mgr;
 
     private static final String FRAGMENT_DIALOG = "dialog";
 
@@ -94,60 +114,98 @@ public class Camera extends Fragment
     // private ImageClassifier classifier;
 
     //HU
-    private Bitmap show; // doppelt in CameraActivity
-    private List<ClassifyItemModel> items;
+
+
     public static final int RESIZED_WIDTH = 227;
     public static final int RESIZED_HEIGHT = 227;
-    private String startHiAIFoundation(Bitmap bitmap) {
-        String result = "";
-        if (bitmap != null) {
-            Bitmap imageBitmap = bitmap;
-            Bitmap rgba = imageBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
-            Bitmap initClassifiedImg = Bitmap.createScaledBitmap(rgba, RESIZED_WIDTH, RESIZED_HEIGHT, false);
-
-            final float[] pixels = getPixel(initClassifiedImg, RESIZED_WIDTH, RESIZED_HEIGHT);
-
-            // this is where the magic happens
-            ModelManager.runModelAsync("hiai", pixels);
-
-            show = initClassifiedImg;
-            //result = items.get(0).toString();
-
-        } else {
-            result = "Model didn't run";
-        }
-
-
-
-        return result;
-    }
-
-    //HU
     public static final double meanValueOfBlue = 103.939;
     public static final double meanValueOfGreen = 116.779;
     public static final double meanValueOfRed = 123.68;
-    private float[] getPixel(Bitmap bitmap, int resizedWidth, int resizedHeight) {
-        int channel = 3;
-        float[] buff = new float[channel * resizedWidth * resizedHeight];
 
-        int rIndex, gIndex, bIndex;
-        for (int i = 0; i < resizedHeight; i++) {
-            for (int j = 0; j < resizedWidth; j++) {
-                bIndex = i * resizedWidth + j;
-                gIndex = bIndex + resizedWidth * resizedHeight;
-                rIndex = gIndex + resizedWidth * resizedHeight;
+    /*
+     * implementiert die Grundfunktionen des ModelManagerListeners:
+     * lädt das Model, startet und stoppt es.
+     * Bei Modelstart Aufrufe an Items.add(new ClassifyModel)->show und Adapter.notifyChange
+     * */
+    ModelManagerListener listener = new ModelManagerListener() {
 
-                int color = bitmap.getPixel(j, i);
+        @Override
+        public void onStartDone(final int taskId) {
+            Log.e(TAG, " java layer onStartDone: " + taskId);
 
-                buff[bIndex] = (float) (blue(color) - meanValueOfBlue);
-                buff[gIndex] = (float) (green(color) - meanValueOfGreen);
-                buff[rIndex] = (float) (red(color) - meanValueOfRed);
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (taskId > 0) {
+                        Toast.makeText(SyncInOneActivity.this, "load model success. taskId is:" + taskId, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SyncInOneActivity.this, "load model fail. taskId is:" + taskId, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
 
-        return buff;
-    }
+        @Override
+        public void onRunDone(final int taskId, final String[] output) {
+
+            for (int i = 0; i < output.length; i++) {
+                Log.e(TAG, "java layer onRunDone: output[" + i + "]:" + output[i]);
+            }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (taskId > 0) {
+                        Toast toast = Toast.makeText(SyncInOneActivity.this, "run model success. taskId is:" + taskId, Toast.LENGTH_SHORT);
+                        CustomToast.showToast(toast, 500);
+                    } else {
+                        Toast toast = Toast.makeText(SyncInOneActivity.this, "run model fail. taskId is:" + taskId, Toast.LENGTH_SHORT);
+                        CustomToast.showToast(toast, 500);
+                    }
+
+
+                    // show bitmap
+                    items.add(new ClassifyItemModel(output[0], output[1], output[2], show));
+                    String result = output[0];
+                    mTextMessage.setText(result);
+
+                    //adapter.notifyDataSetChanged();
+                }
+            });
+        }
+
+        @Override
+        public void onStopDone(final int taskId) {
+            Log.e(TAG, "java layer onStopDone: " + taskId);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (taskId > 0) {
+                        Toast.makeText(SyncInOneActivity.this, "unload model success. taskId is:" + taskId, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SyncInOneActivity.this, "unload model fail. taskId is:" + taskId, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onTimeout(final int taskId) {
+            Log.e(TAG, "java layer onTimeout: " + taskId);
+        }
+
+        @Override
+        public void onError(final int taskId, final int errCode) {
+            Log.e(TAG, "onError:" + taskId + " errCode:" + errCode);
+        }
+
+        @Override
+        public void onServiceDied() {
+            Log.e(TAG, "onServiceDied: ");
+        }
+    };
 
     /** Max preview width that is guaranteed by Camera2 API */
     private static final int MAX_PREVIEW_WIDTH = 1920;
@@ -156,6 +214,8 @@ public class Camera extends Fragment
     private static final int MAX_PREVIEW_HEIGHT = 1080;
 
     /**
+     * the surface texture renders the content stream (here video) into the TextureView
+     * 
      * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a {@link
      * TextureView}.
      */
@@ -220,7 +280,7 @@ public class Camera extends Fragment
                     cameraOpenCloseLock.release();
                     currentCameraDevice.close();
                     cameraDevice = null;
-                    Activity activity = getActivity();
+                    Activity activity = SyncInOneActivity.this;
                     if (null != activity) {
                         activity.finish();
                     }
@@ -268,16 +328,15 @@ public class Camera extends Fragment
      * @param text The message to show
      */
     private void showToast(final String text) {
-        final Activity activity = getActivity();
-        if (activity != null) {
-            activity.runOnUiThread(
+
+            runOnUiThread(
                     new Runnable() {
                         @Override
                         public void run() {
                             textView.setText(text);
                         }
                     });
-        }
+
     }
 
     /**
@@ -338,37 +397,50 @@ public class Camera extends Fragment
         }
     }
 
-    public static Camera newInstance() {
-        return new Camera();
-    }
-
-    /** Layout the preview and buttons. */
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_camera_basic, container, false);
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_syncinone);
 
-    /** Connect the buttons to their event handler. */
-    @Override
-    public void onViewCreated(final View view, Bundle savedInstanceState) {
-        textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
-        textView = (TextView) view.findViewById(R.id.text);
-    }
+        mTextMessage = (TextView) findViewById(R.id.mTextMessage);
+        mTextMessage.setText("Init");
 
-    /** Load the model and labels. */
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-//        try {
-//            // TODO HiAI: passiert in Activity?
-//            classifier = new ImageClassifier(getActivity());
-//
-//        } catch (IOException e) {
-//            Log.e(TAG, "Failed to initialize an image classifier.");
-//        }
+        textureView = (AutoFitTextureView) findViewById(R.id.texture);
+        textView = (TextView) findViewById(R.id.text);
+
+        /** load libhiai.so */
+        boolean isSoLoadSuccess = ModelManager.init();
+        if (isSoLoadSuccess) {
+            Toast.makeText(this, "load libhiai.so success.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "load libhiai.so fail.", Toast.LENGTH_SHORT).show();
+        }
+
+        /** init classify labels */
+        initLabels();
+
+        /*
+         * AssetManager -> Huawei-Cambricon Model
+         * */
+        mgr = getResources().getAssets();
+
+        int ret = ModelManager.registerListenerJNI(listener);
+
+        Log.e(TAG, "onCreate: " + ret);
+
+        // lädt das Model
+        ModelManager.loadModelAsync("hiai", mgr);
+
+        items = new ArrayList<>();
+
+        // doppelt?
+        mgr = getResources().getAssets();
+
         startBackgroundThread();
+
+
     }
+
 
     @Override
     public void onResume() {
@@ -393,12 +465,7 @@ public class Camera extends Fragment
         super.onPause();
     }
 
-    @Override
-    public void onDestroy() {
-        // TODO HiAI: in Activity?
-        // classifier.close();
-        super.onDestroy();
-    }
+
 
     /**
      * Sets up member variables related to camera.
@@ -407,8 +474,7 @@ public class Camera extends Fragment
      * @param height The height of available size for camera preview
      */
     private void setUpCameraOutputs(int width, int height) {
-        Activity activity = getActivity();
-        CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+        CameraManager manager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
         try {
             for (String cameraId : manager.getCameraIdList()) {
                 CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
@@ -435,7 +501,7 @@ public class Camera extends Fragment
 
                 // Find out if we need to swap dimension to get the preview size relative to sensor
                 // coordinate.
-                int displayRotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+                int displayRotation = this.getWindowManager().getDefaultDisplay().getRotation();
                 // noinspection ConstantConditions
                 /* Orientation of the camera sensor */
                 int sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
@@ -458,7 +524,7 @@ public class Camera extends Fragment
                 }
 
                 Point displaySize = new Point();
-                activity.getWindowManager().getDefaultDisplay().getSize(displaySize);
+                this.getWindowManager().getDefaultDisplay().getSize(displaySize);
                 int rotatedPreviewWidth = width;
                 int rotatedPreviewHeight = height;
                 int maxPreviewWidth = displaySize.x;
@@ -504,18 +570,17 @@ public class Camera extends Fragment
         } catch (NullPointerException e) {
             // Currently an NPE is thrown when the Camera2API is used but not supported on the
             // device this code runs.
-            ErrorDialog.newInstance(getString(R.string.camera_error))
-                    .show(getChildFragmentManager(), FRAGMENT_DIALOG);
+            e.printStackTrace();
+            //Camera.ErrorDialog.newInstance(getString(R.string.camera_error)).show(getChildFragmentManager(), FRAGMENT_DIALOG);
         }
     }
 
     private String[] getRequiredPermissions() {
-        Activity activity = getActivity();
         try {
             PackageInfo info =
-                    activity
+                    this
                             .getPackageManager()
-                            .getPackageInfo(activity.getPackageName(), PackageManager.GET_PERMISSIONS);
+                            .getPackageInfo(this.getPackageName(), PackageManager.GET_PERMISSIONS);
             String[] ps = info.requestedPermissions;
             if (ps != null && ps.length > 0) {
                 return ps;
@@ -530,15 +595,14 @@ public class Camera extends Fragment
     /** Opens the camera specified by {@link Camera#cameraId}. */
     private void openCamera(int width, int height) {
         if (!checkedPermissions && !allPermissionsGranted()) {
-            FragmentCompat.requestPermissions(this, getRequiredPermissions(), PERMISSIONS_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, getRequiredPermissions(), PERMISSIONS_REQUEST_CODE);
             return;
         } else {
             checkedPermissions = true;
         }
         setUpCameraOutputs(width, height);
         configureTransform(width, height);
-        Activity activity = getActivity();
-        CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+        CameraManager manager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
         try {
             if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
@@ -555,7 +619,7 @@ public class Camera extends Fragment
 
     private boolean allPermissionsGranted() {
         for (String permission : getRequiredPermissions()) {
-            if (ContextCompat.checkSelfPermission(getActivity(), permission)
+            if (ContextCompat.checkSelfPermission(this, permission)
                     != PackageManager.PERMISSION_GRANTED) {
                 return false;
             }
@@ -697,11 +761,10 @@ public class Camera extends Fragment
      * @param viewHeight The height of `textureView`
      */
     private void configureTransform(int viewWidth, int viewHeight) {
-        Activity activity = getActivity();
-        if (null == textureView || null == previewSize || null == activity) {
+        if (null == textureView || null == previewSize || null == this) {
             return;
         }
-        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        int rotation = this.getWindowManager().getDefaultDisplay().getRotation();
         Matrix matrix = new Matrix();
         RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
         RectF bufferRect = new RectF(0, 0, previewSize.getHeight(), previewSize.getWidth());
@@ -757,8 +820,8 @@ public class Camera extends Fragment
 
         private static final String ARG_MESSAGE = "message";
 
-        public static ErrorDialog newInstance(String message) {
-            ErrorDialog dialog = new ErrorDialog();
+        public static Camera.ErrorDialog newInstance(String message) {
+            Camera.ErrorDialog dialog = new Camera.ErrorDialog();
             Bundle args = new Bundle();
             args.putString(ARG_MESSAGE, message);
             dialog.setArguments(args);
@@ -781,5 +844,77 @@ public class Camera extends Fragment
                     .create();
         }
     }
-}
 
+
+    /**
+     * initiert die Labels des Models aus labels.txt und gibt weiter an ModelManager.initLabels
+     */
+    private void initLabels() {
+        byte[] labels;
+        try {
+            InputStream assetsInputStream = getAssets().open("labels.txt");
+            int available = assetsInputStream.available();
+            labels = new byte[available];
+            assetsInputStream.read(labels);
+            assetsInputStream.close();
+            ModelManager.initLabels(labels);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private float[] getPixel(Bitmap bitmap, int resizedWidth, int resizedHeight) {
+        int channel = 3;
+        float[] buff = new float[channel * resizedWidth * resizedHeight];
+
+        int rIndex, gIndex, bIndex;
+        for (int i = 0; i < resizedHeight; i++) {
+            for (int j = 0; j < resizedWidth; j++) {
+                bIndex = i * resizedWidth + j;
+                gIndex = bIndex + resizedWidth * resizedHeight;
+                rIndex = gIndex + resizedWidth * resizedHeight;
+
+                int color = bitmap.getPixel(j, i);
+
+                buff[bIndex] = (float) (blue(color) - meanValueOfBlue);
+                buff[gIndex] = (float) (green(color) - meanValueOfGreen);
+                buff[rIndex] = (float) (red(color) - meanValueOfRed);
+            }
+        }
+
+        return buff;
+    }
+
+    private String startHiAIFoundation(Bitmap bitmap) {
+        String result = "";
+        if (bitmap != null) {
+            Bitmap imageBitmap = bitmap;
+            Bitmap rgba = imageBitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+            Bitmap initClassifiedImg = Bitmap.createScaledBitmap(rgba, RESIZED_WIDTH, RESIZED_HEIGHT, false);
+
+            final float[] pixels = getPixel(initClassifiedImg, RESIZED_WIDTH, RESIZED_HEIGHT);
+
+            // this is where the magic happens
+            ModelManager.runModelAsync("hiai", pixels);
+
+            show = initClassifiedImg;
+            //result = items.get(0).toString();
+
+        } else {
+            result = "Model didn't run";
+        }
+
+
+
+        return result;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ModelManager.unloadModelAsync();
+    }
+
+}
