@@ -171,11 +171,12 @@ public class SyncInOneActivity extends AppCompatActivity {
                     String result = output[0];
 
                     String resultName = result.substring(0, result.indexOf('-'));
-                    if (resultName == "laptop, laptop computer") {
-                        // get FrameLayout View and get root View
+                    if (resultName == "notebook, notebook computer\r ") {
+                        // get FrameLayout View and get root View laptop, laptop computer
                         View someView = findViewById(R.id.control);
-                        View root = someView.getRootView();
-                        root.setBackgroundColor(getResources().getColor(R.color.colorDanger));
+                        someView.setBackgroundColor(getResources().getColor(R.color.colorDanger));
+                        //View root = someView.getRootView();
+                        //root.setBackgroundColor(getResources().getColor(R.color.colorDanger));
 
                     }
 

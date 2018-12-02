@@ -12,24 +12,58 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/imageLoad"
-        android:layout_width="185dp"
-        android:layout_height="105dp"
+        android:id="@+id/settings"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        app:srcCompat="@drawable/settings" />
 
+    <ImageView
+        android:id="@+id/imageLoad"
+        android:layout_width="370dp"
+        android:layout_height="210dp"
+        android:layout_below="@+id/settings"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="194dp"
+        android:layout_marginTop="10dp"
         android:onClick="startDetection"
         app:srcCompat="@drawable/ic_launcher_background" />
 
+    <Button
+        android:id="@+id/buttonDetect"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageLoad"
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/btn_bg"
+        android:text="Start Detection"
+        android:onClick="startDetection"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/buttonDetectBackground"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonDetect"
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/btn_bg"
+        android:text="Start Detection in Background"
+        android:textAllCaps="false" />
+
     <TextView
         android:id="@+id/textMain"
-        android:layout_width="304dp"
-        android:layout_height="95dp"
-
-        android:layout_below="@+id/imageLoad"
+        android:layout_width="300dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/buttonDetectBackground"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="42dp"
         android:text="TextView"
