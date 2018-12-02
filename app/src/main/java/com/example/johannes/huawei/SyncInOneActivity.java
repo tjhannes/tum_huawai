@@ -95,7 +95,6 @@ public class SyncInOneActivity extends AppCompatActivity {
 
     private static final String TAG = "SyncActivity";
 
-    private TextView mTextMessage;
     private List<ClassifyItemModel> items;
     private Bitmap show;
     private AssetManager mgr;
@@ -109,7 +108,7 @@ public class SyncInOneActivity extends AppCompatActivity {
     private final Object lock = new Object();
     private boolean runClassifier = false;
     private boolean checkedPermissions = false;
-    private TextView textView;
+    private TextView textPredict;
     // TODO replace with HiAI
     // private ImageClassifier classifier;
 
@@ -156,19 +155,31 @@ public class SyncInOneActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (taskId > 0) {
+
+                    // show Toast with ID after each prediction
+                    /*if (taskId > 0) {
                         Toast toast = Toast.makeText(SyncInOneActivity.this, "run model success. taskId is:" + taskId, Toast.LENGTH_SHORT);
                         CustomToast.showToast(toast, 500);
                     } else {
                         Toast toast = Toast.makeText(SyncInOneActivity.this, "run model fail. taskId is:" + taskId, Toast.LENGTH_SHORT);
                         CustomToast.showToast(toast, 500);
-                    }
+                    }*/
 
 
                     // show bitmap
                     items.add(new ClassifyItemModel(output[0], output[1], output[2], show));
                     String result = output[0];
-                    mTextMessage.setText(result);
+
+                    String resultName = result.substring(0, result.indexOf('-'));
+                    if (resultName == "laptop, laptop computer") {
+                        // get FrameLayout View and get root View
+                        View someView = findViewById(R.id.control);
+                        View root = someView.getRootView();
+                        root.setBackgroundColor(getResources().getColor(R.color.colorDanger));
+
+                    }
+
+                    textPredict.setText(result);
 
                     //adapter.notifyDataSetChanged();
                 }
@@ -215,7 +226,7 @@ public class SyncInOneActivity extends AppCompatActivity {
 
     /**
      * the surface texture renders the content stream (here video) into the TextureView
-     * 
+     *
      * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a {@link
      * TextureView}.
      */
@@ -333,7 +344,7 @@ public class SyncInOneActivity extends AppCompatActivity {
                     new Runnable() {
                         @Override
                         public void run() {
-                            textView.setText(text);
+                            textPredict.setText(text);
                         }
                     });
 
@@ -402,11 +413,9 @@ public class SyncInOneActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_syncinone);
 
-        mTextMessage = (TextView) findViewById(R.id.mTextMessage);
-        mTextMessage.setText("Init");
-
         textureView = (AutoFitTextureView) findViewById(R.id.texture);
-        textView = (TextView) findViewById(R.id.text);
+        textPredict = (TextView) findViewById(R.id.textPredict);
+        textPredict.setText("Init");
 
         /** load libhiai.so */
         boolean isSoLoadSuccess = ModelManager.init();
@@ -592,7 +601,7 @@ public class SyncInOneActivity extends AppCompatActivity {
         }
     }
 
-    /** Opens the camera specified by {@link Camera#cameraId}. */
+    /** Opens the camera specified by { Camera#cameraId}. */
     private void openCamera(int width, int height) {
         if (!checkedPermissions && !allPermissionsGranted()) {
             ActivityCompat.requestPermissions(this, getRequiredPermissions(), PERMISSIONS_REQUEST_CODE);
@@ -801,7 +810,7 @@ public class SyncInOneActivity extends AppCompatActivity {
         if (bitmap != null) {
             bitmap.recycle();
         }
-        showToast(textToShow);
+        //showToast(textToShow);
     }
 
     /** Compares two {@code Size}s based on their areas. */
@@ -816,12 +825,13 @@ public class SyncInOneActivity extends AppCompatActivity {
     }
 
     /** Shows an error message dialog. */
+    // TODO delete?
     public static class ErrorDialog extends DialogFragment {
 
         private static final String ARG_MESSAGE = "message";
 
-        public static Camera.ErrorDialog newInstance(String message) {
-            Camera.ErrorDialog dialog = new Camera.ErrorDialog();
+        public static ErrorDialog newInstance(String message) {
+            ErrorDialog dialog = new ErrorDialog();
             Bundle args = new Bundle();
             args.putString(ARG_MESSAGE, message);
             dialog.setArguments(args);
