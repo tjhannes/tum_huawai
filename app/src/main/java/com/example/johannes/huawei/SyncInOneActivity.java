@@ -171,13 +171,19 @@ public class SyncInOneActivity extends AppCompatActivity {
                     String result = output[0];
 
                     String resultName = result.substring(0, result.indexOf('-'));
-                    if (resultName == "notebook, notebook computer\r ") {
+                    if (resultName.equals("notebook, notebook computer\r ") ||
+                            resultName.equals("laptop, laptop computer\r ") ||
+                            resultName.equals("computer keyboard, keypad\r ")) {
                         // get FrameLayout View and get root View laptop, laptop computer
                         View someView = findViewById(R.id.control);
                         someView.setBackgroundColor(getResources().getColor(R.color.colorDanger));
+                        Toast.makeText(SyncInOneActivity.this, "DANGER!!", Toast.LENGTH_SHORT).show();
                         //View root = someView.getRootView();
                         //root.setBackgroundColor(getResources().getColor(R.color.colorDanger));
 
+                    } else {
+                        View someView = findViewById(R.id.control);
+                        someView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                     }
 
                     textPredict.setText(result);

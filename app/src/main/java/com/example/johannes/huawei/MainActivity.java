@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,8 +50,16 @@ public class MainActivity extends AppCompatActivity {
         imageLoad = (ImageView) findViewById (R.id.imageLoad);
         imageLoad.setImageResource(R.drawable.huawai);
 
+        Button buttonDetectBackground = findViewById(R.id.buttonDetectBackground);
+        buttonDetectBackground.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                System.exit(0);
+            }
+        });
+
         // wird auch von DetectionActivity geprueft
         requestPermissions();
+
 
 
 
