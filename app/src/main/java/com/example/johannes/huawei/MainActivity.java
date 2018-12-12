@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public void startDetection(View view) {
 
         // launch neural net activity
-        Intent intent = new Intent(this, SyncInOneActivity.class);
+        Intent intent = new Intent(this, Camera2Activity.class);
 
         Log.d(LOG_TAG, "Start HiAI Foundation");
 

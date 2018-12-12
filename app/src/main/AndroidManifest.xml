@@ -30,7 +30,7 @@
         </activity>
 
         <activity
-            android:name=".SyncInOneActivity"
+            android:name=".Camera2Activity"
             android:parentActivityName=".MainActivity"
             android:label="Smombie Protect">
         </activity>
