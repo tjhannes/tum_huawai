@@ -68,10 +68,12 @@ public class Camera2Activity extends AppCompatActivity {
     /** Max preview width and height that is guaranteed by Camera2 API */
     private static final int MAX_PREVIEW_WIDTH = 1920;
     private static final int MAX_PREVIEW_HEIGHT = 1080;
-    /** Adjust size from TextureView for classification */
+    /** This size is taken from the Camera Stream of TextureView and sent to model for classification */
+    // TODO change to our model size
     static final int DIM_IMG_SIZE_X = 224;
     static final int DIM_IMG_SIZE_Y = 224;
 
+    // TODO change size
     public static final int RESIZED_WIDTH = 227;
     public static final int RESIZED_HEIGHT = 227;
     public static final double meanValueOfBlue = 103.939;
@@ -137,7 +139,7 @@ public class Camera2Activity extends AppCompatActivity {
         }
 
         @Override
-        public void onRunDone(final int taskId, final String[] output) {
+        public void onRunDone(final int taskId, final float[] output) {
 
             for (int i = 0; i < output.length; i++) {
                 Log.e(TAG, "java layer onRunDone: output[" + i + "]:" + output[i]);
@@ -148,25 +150,27 @@ public class Camera2Activity extends AppCompatActivity {
                 public void run() {
 
                     // show bitmap
-                    items.add(new ClassifyItemModel(output[0], output[1], output[2], show));
-                    String result = output[0];
+                    //items.add(new ClassifyItemModel(output[0], output[1], output[2], show));
+                    // TODO I am not sure what our model will give as output, depending on the output we have to convert this to danger and nodanger
+                    Float result = output[0];
 
-                    String resultName = result.substring(0, result.indexOf('-'));
-                    if (resultName.equals("notebook, notebook computer\r ") ||
-                            resultName.equals("laptop, laptop computer\r ") ||
-                            resultName.equals("computer keyboard, keypad\r ")) {
-                        View someView = findViewById(R.id.control);
-                        someView.setBackgroundColor(getResources().getColor(R.color.colorDanger));
-                        // Toast.makeText(Camera2Activity.this, "DANGER!!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        View someView = findViewById(R.id.control);
-                        someView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    }
+//                    String resultName = result.substring(0, result.indexOf('-'));
+//                    if (resultName.equals("notebook, notebook computer\r ") ||
+//                            resultName.equals("laptop, laptop computer\r ") ||
+//                            resultName.equals("computer keyboard, keypad\r ")) {
+//                        View someView = findViewById(R.id.control);
+//                        someView.setBackgroundColor(getResources().getColor(R.color.colorDanger));
+//                        // Toast.makeText(Camera2Activity.this, "DANGER!!", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        View someView = findViewById(R.id.control);
+//                        someView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+//                    }
 
-                    textPredict.setText(result);
+                    textPredict.setText(result.toString());
                 }
             });
         }
+
 
         @Override
         public void onStopDone(final int taskId) {
@@ -351,6 +355,11 @@ public class Camera2Activity extends AppCompatActivity {
         }
     }
 
+    // Used to load the 'native-lib' library on application startup.
+    static {
+        System.loadLibrary("native-lib");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -369,7 +378,8 @@ public class Camera2Activity extends AppCompatActivity {
         }
 
         /** init classify labels */
-        initLabels();
+        // no labels used at the moment
+        // initLabels();
 
         /*
          * AssetManager -> Huawei-Cambricon Model
@@ -381,6 +391,7 @@ public class Camera2Activity extends AppCompatActivity {
         Log.e(TAG, "onCreate: " + ret);
 
         // lädt das Model
+        // TODO does this load the dangermodel.cambricon? debug here
         ModelManager.loadModelAsync("hiai", mgr);
 
         items = new ArrayList<>();
@@ -673,6 +684,8 @@ public class Camera2Activity extends AppCompatActivity {
 
             // this is where the magic happens
             ModelManager.runModelAsync("hiai", pixels);
+            // TODO instead of calling ModelManager.runModelAsync we could use:
+            // DangermodelModel.predictAsync(pixels);
 
             show = initClassifiedImg;
 
@@ -819,19 +832,19 @@ public class Camera2Activity extends AppCompatActivity {
     /**
      * initiert die Labels des Models aus labels.txt und gibt weiter an ModelManager.initLabels
      */
-    private void initLabels() {
-        byte[] labels;
-        try {
-            InputStream assetsInputStream = getAssets().open("labels.txt");
-            int available = assetsInputStream.available();
-            labels = new byte[available];
-            assetsInputStream.read(labels);
-            assetsInputStream.close();
-            ModelManager.initLabels(labels);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void initLabels() {
+//        byte[] labels;
+//        try {
+//            InputStream assetsInputStream = getAssets().open("labels.txt");
+//            int available = assetsInputStream.available();
+//            labels = new byte[available];
+//            assetsInputStream.read(labels);
+//            assetsInputStream.close();
+//            ModelManager.initLabels(labels);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /** Save rgb bitmap as pixel array */
     private float[] getPixel(Bitmap bitmap, int resizedWidth, int resizedHeight) {

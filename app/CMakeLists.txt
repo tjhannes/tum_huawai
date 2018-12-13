@@ -17,9 +17,8 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             src/main/cpp/classify_jni.cpp
-             src/main/cpp/classify_async_jni.cpp
-             src/main/cpp/common.cpp)
+             src/main/cpp/hiai_async_jni.cpp
+             src/main/cpp/hiai_sync_jni.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

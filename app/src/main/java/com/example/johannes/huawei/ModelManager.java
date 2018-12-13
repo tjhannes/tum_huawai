@@ -11,6 +11,10 @@ public class ModelManager {
     private ModelManager() {
     }
 
+    static {
+        System.loadLibrary("hiai");
+    }
+
     public static boolean init() {
         try {
             System.loadLibrary("hiai");
@@ -21,15 +25,14 @@ public class ModelManager {
         }
     }
 
-    /* classify labels */
-    public static native void initLabels(byte[] labels);
-
     /* DDK model manager sync interfaces */
     public static native int loadModelSync(String modelName, AssetManager mgr);
 
-    public static native String[] runModelSync(String modelName, float[] buf);
+    public static native float[] runModelSync(String modelName, float[] buf);
 
     public static native int unloadModelSync();
+
+
 
     /* DDK model manager async interfaces */
     public static native int registerListenerJNI(ModelManagerListener listener);
