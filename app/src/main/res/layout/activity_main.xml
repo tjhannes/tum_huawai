@@ -69,5 +69,14 @@
         android:text="TextView"
         android:textAlignment="center" />
 
+    <TextView
+        android:id="@+id/textTfLite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/buttonDetect"
+        android:layout_alignEnd="@+id/imageLoad"
+        android:onClick="startTfLite"
+        android:text="Test" />
+
 
 </RelativeLayout>

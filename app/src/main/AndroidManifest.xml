@@ -35,6 +35,12 @@
             android:label="Smombie Protect">
         </activity>
 
+        <activity
+            android:name=".TfLiteActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="Smombie Protect">
+        </activity>
+
     </application>
 
 </manifest>

@@ -37,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void startTfLite(View view) {
+
+        // launch neural net activity
+        Intent intent = new Intent(this, TfLiteActivity.class);
+
+        Log.d(LOG_TAG, "Start Tensorflow");
+
+        startActivity(intent);
+    }
+
 
 
     @Override

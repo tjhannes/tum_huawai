@@ -1,14 +1,146 @@
 ﻿[
   {
-    "id":"4388860059755",
-    "name":"Ja",
+    "barcode":"4388860059755",
+    "name":"Ja! Cashew Kerne",
     "price":"2.49",
-    "desc":"example"
+    "desc":"YUMI YUMI"
   },
   {
-    "id":"4388860029473",
-    "name":"Nein",
-    "price":"9.49",
-    "desc":"example description"
+    "barcode":"4066600603405",
+    "name":"Paulaner Spezi",
+    "price":"0.69",
+    "desc":"GLUCK GLUCK"
+  },
+  {
+    "barcode":"4000417214003",
+    "name":"Rittersport Knusperkeks",
+    "price":"1.29",
+    "desc":"NOM NOM"
+  },
+  {
+    "barcode":"4000417026002",
+    "name":"Rittersport Nugat",
+    "price":"1.29",
+    "desc":"NOM NOM"
+  },
+  {
+    "barcode":"4047443345042",
+    "name":"Hama Universal Smartphone Bike Holder",
+    "price":"27.99",
+    "desc":"GRIP GRIP"
+  },
+  {
+    "barcode":"5060337500401",
+    "name":"Monster Engery Ultra",
+    "price":"2.39",
+    "desc":"GLUCK GLUCK"
+  },
+  {
+    "barcode":"4105250022003",
+    "name":"Augustinerbräu Lagerbier Hell",
+    "price":"1.29",
+    "desc":"GLUCK GLUCK"
+  },
+  {
+    "barcode":"4003586000385",
+    "name":"Funny-Frisch Chipsfrisch Gesalzen",
+    "price":"1.79",
+    "desc":"NOM NOM"
+  },
+  {
+    "barcode":"8076800195033",
+    "name":"Barilla Spaghettini",
+    "price":"1.99",
+    "desc":"HAM HAM"
+  },
+  {
+    "barcode":"4000470012899",
+    "name":"Bernbacher Bolognese",
+    "price":"2.79",
+    "desc":"HAM HAM"
+  },
+  {
+    "barcode":"4029764001807",
+    "name":"Club-Mate",
+    "price":"0.79",
+    "desc":"GLUCK GLUCK"
+  },
+  {
+    "barcode":"4045317066697",
+    "name":"Milch - Bärenmarke",
+    "price":"2.49",
+    "desc":"GLUCK GLUCK"
+  },
+  {
+    "barcode":"4008400402222",
+    "name":"Nutella",
+    "price":"2.49",
+    "desc":"YUMI YUMI"
+  },
+  {
+    "barcode":"4311501451786",
+    "name":"Frühstücksbrötchen",
+    "price":"2.49",
+    "desc":"YUMI YUMI"
+  },
+  {
+    "barcode":"4260011730129",
+    "name":"Frische Eier - Bioland",
+    "price":"2.49",
+    "desc":"YUMI YUMI"
+  },
+  {
+    "barcode":"5000112548068",
+    "name":"CocaCola - 0.5L",
+    "price":"2.49",
+    "desc":"GLUCK GLUCK"
+  },
+  {
+    "barcode":"5000112546415",
+    "name":"CocaCola - 1.25L",
+    "price":"2.49",
+    "desc":"GLUCK GLUCK"
+  },
+  {
+    "barcode":"4066600641964",
+    "name":"Paulaner Hefe-Weißbier",
+    "price":"2.49",
+    "desc":"GLUCK GLUCK"
+  },
+  {
+    "barcode":"4017100276613",
+    "name":"PickUP!",
+    "price":"1.89",
+    "desc":"YUMI YUMI"
+  },
+  {
+    "barcode":"5000159500258",
+    "name":"Celebrations",
+    "price":"2.49",
+    "desc":"YUMI YUMI"
+  },
+  {
+    "barcode":"apple",
+    "name":"Apple",
+    "price":"0.10",
+    "desc":"YUMI YUMI"
+  },
+  {
+    "barcode":"cookies",
+    "name":"Cookies",
+    "price":"0.50",
+    "desc":"YUMI YUMI"
+  },
+  {
+    "barcode":"ritter sport",
+    "name":"Chocolate",
+    "price":"0.70",
+    "desc":"YUMI YUMI"
+  },
+  {
+    "barcode":"4000417012005",
+    "name":"Rittersport Traube Nuss",
+    "price":"1.29",
+    "desc":"YUMI YUMI"
   }
 ]

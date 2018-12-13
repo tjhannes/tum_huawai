@@ -57,6 +57,7 @@ dependencies {
     implementation 'com.android.support:support-v13:26.1.0'
 
     implementation(name: 'vision-oversea-release', ext: 'aar')
+    implementation 'org.tensorflow:tensorflow-lite:+'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
