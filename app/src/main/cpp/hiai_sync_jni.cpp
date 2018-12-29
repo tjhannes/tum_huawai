@@ -82,7 +82,7 @@ static void getInputAndOutputFromModel(const char *modelName){
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_example_lymperis_techchallenge2_ModelManager_loadModelSync(JNIEnv *env, jclass type,
+Java_com_example_johannes_huawei_ModelManager_loadModelSync(JNIEnv *env, jclass type,
                                                     jstring jmodelName, jobject assetManager) {
     const char *modelName = env->GetStringUTFChars(jmodelName, 0);
 
@@ -136,7 +136,7 @@ Java_com_example_lymperis_techchallenge2_ModelManager_loadModelSync(JNIEnv *env,
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_example_lymperis_techchallenge2_ModelManager_unloadModelSync(JNIEnv *env, jclass type) {
+Java_com_example_johannes_huawei_ModelManager_unloadModelSync(JNIEnv *env, jclass type) {
     if (NULL == modelManager) {
         LOGE("please load model first.");
         return -1;
@@ -159,7 +159,7 @@ Java_com_example_lymperis_techchallenge2_ModelManager_unloadModelSync(JNIEnv *en
 
 extern "C"
 JNIEXPORT jfloatArray JNICALL
-Java_com_example_lymperis_techchallenge2_ModelManager_runModelSync(JNIEnv *env, jclass type, jstring jmodelName,
+Java_com_example_johannes_huawei_ModelManager_runModelSync(JNIEnv *env, jclass type, jstring jmodelName,
                                                    jfloatArray jbuf) {
 
 	if (NULL == modelManager) {
@@ -176,12 +176,12 @@ Java_com_example_lymperis_techchallenge2_ModelManager_runModelSync(JNIEnv *env, 
 	
     const char *modelName = env->GetStringUTFChars(jmodelName, 0);
       
-    //Todo: modify input tensor
+    //Todo: modify input tensor //
     inputtensor = HIAI_TensorBuffer_create(input_N, input_C, input_H, input_W);
 
     HIAI_TensorBuffer *inputtensorbuffer[] = {inputtensor};
 
-    //Todo: modify  output tensor
+    //Todo: modify  output tensor //
     outputtensor = HIAI_TensorBuffer_create(output_N, output_C, output_H, output_W);
 
     HIAI_TensorBuffer *outputtensorbuffer[] = {outputtensor};
@@ -197,14 +197,14 @@ Java_com_example_lymperis_techchallenge2_ModelManager_runModelSync(JNIEnv *env, 
     struct timeval tpstart, tpend;
     gettimeofday(&tpstart, NULL);
 
-    //Todo: modify runModel parameter
+    //Todo: modify runModel parameter //1000
     int ret = HIAI_ModelManager_runModel(
             modelManager,
             inputtensorbuffer,
             1,
             outputtensorbuffer,
             1,
-            1000,
+            2,
             modelName);
 
 
@@ -220,8 +220,8 @@ Java_com_example_lymperis_techchallenge2_ModelManager_runModelSync(JNIEnv *env, 
 
     LOGI("infrence time %f ms.", time_use / 1000);
 
-    //Todo: Modify to your own data(category)
-    int outputSize = 1000;
+    //Todo: Modify to your own data(category) //1000
+    int outputSize = 2;
 
     float *outputBuffer = (float *) HIAI_TensorBuffer_getRawBuffer(outputtensor);
 

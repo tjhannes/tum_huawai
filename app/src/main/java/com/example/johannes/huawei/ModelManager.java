@@ -11,6 +11,7 @@ public class ModelManager {
     private ModelManager() {
     }
 
+    // doppelt initiiert?
     static {
         System.loadLibrary("hiai");
     }

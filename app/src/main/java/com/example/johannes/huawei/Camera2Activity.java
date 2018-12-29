@@ -9,8 +9,10 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,12 +72,12 @@ public class Camera2Activity extends AppCompatActivity {
     private static final int MAX_PREVIEW_HEIGHT = 1080;
     /** This size is taken from the Camera Stream of TextureView and sent to model for classification */
     // TODO change to our model size
-    static final int DIM_IMG_SIZE_X = 224;
-    static final int DIM_IMG_SIZE_Y = 224;
+    static final int DIM_IMG_SIZE_X = 128;
+    static final int DIM_IMG_SIZE_Y = 128;
 
-    // TODO change size
-    public static final int RESIZED_WIDTH = 227;
-    public static final int RESIZED_HEIGHT = 227;
+    // TODO change size //227 width and height
+    public static final int RESIZED_WIDTH = 128;
+    public static final int RESIZED_HEIGHT = 128;
     public static final double meanValueOfBlue = 103.939;
     public static final double meanValueOfGreen = 116.779;
     public static final double meanValueOfRed = 123.68;
@@ -83,6 +85,7 @@ public class Camera2Activity extends AppCompatActivity {
     private List<ClassifyItemModel> items;
     private Bitmap show;
     private AssetManager mgr;
+    private String[] labels;
 
     private final Object lock = new Object();
     private boolean runClassifier = false;
@@ -141,9 +144,9 @@ public class Camera2Activity extends AppCompatActivity {
         @Override
         public void onRunDone(final int taskId, final float[] output) {
 
-            for (int i = 0; i < output.length; i++) {
-                Log.e(TAG, "java layer onRunDone: output[" + i + "]:" + output[i]);
-            }
+//            for (int i = 0; i < output.length; i++) {
+//                Log.e(TAG, "java layer onRunDone: output[" + i + "]:" + output[i]);
+//            }
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -151,22 +154,27 @@ public class Camera2Activity extends AppCompatActivity {
 
                     // show bitmap
                     //items.add(new ClassifyItemModel(output[0], output[1], output[2], show));
-                    // TODO I am not sure what our model will give as output, depending on the output we have to convert this to danger and nodanger
-                    Float result = output[0];
 
-//                    String resultName = result.substring(0, result.indexOf('-'));
-//                    if (resultName.equals("notebook, notebook computer\r ") ||
-//                            resultName.equals("laptop, laptop computer\r ") ||
-//                            resultName.equals("computer keyboard, keypad\r ")) {
-//                        View someView = findViewById(R.id.control);
-//                        someView.setBackgroundColor(getResources().getColor(R.color.colorDanger));
-//                        // Toast.makeText(Camera2Activity.this, "DANGER!!", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        View someView = findViewById(R.id.control);
-//                        someView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-//                    }
+                    String[] predictedLabel = new String[2];
 
-                    textPredict.setText(result.toString());
+                    for(int i=0;i<2;i++){
+                        float value = output[i];
+                        predictedLabel[i] = labels[i] + "--" + value*100 + "%";
+                    }
+
+                    // two floats are equal if smaller than epsilon
+                    float epsilon = 0.001F;
+                    if (predictedLabel[0].equals("danger--1.0%") ||
+                            Math.abs(output[0]-1.0F)<epsilon){
+                        View someView = findViewById(R.id.control);
+                        someView.setBackgroundColor(getResources().getColor(R.color.colorDanger));
+                        // Toast.makeText(Camera2Activity.this, "DANGER!!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        View someView = findViewById(R.id.control);
+                        someView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    }
+
+                    textPredict.setText(Arrays.toString(predictedLabel));
                 }
             });
         }
@@ -355,11 +363,6 @@ public class Camera2Activity extends AppCompatActivity {
         }
     }
 
-    // Used to load the 'native-lib' library on application startup.
-    static {
-        System.loadLibrary("native-lib");
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -377,22 +380,24 @@ public class Camera2Activity extends AppCompatActivity {
             Toast.makeText(this, "load libhiai.so fail.", Toast.LENGTH_SHORT).show();
         }
 
-        /** init classify labels */
-        // no labels used at the moment
-        // initLabels();
-
         /*
          * AssetManager -> Huawei-Cambricon Model
          * */
         mgr = getResources().getAssets();
 
-        int ret = ModelManager.registerListenerJNI(listener);
+        /** init classify labels */
+        labels = new String[2];
+        labels = initLabels(mgr);
+
+        int ret = DangermodelModel.registerListenerJNI(listener);
+                //ModelManager.registerListenerJNI(listener);
 
         Log.e(TAG, "onCreate: " + ret);
 
         // lädt das Model
         // TODO does this load the dangermodel.cambricon? debug here
-        ModelManager.loadModelAsync("hiai", mgr);
+        //ModelManager.loadModelAsync("hiai", mgr);
+        DangermodelModel.loadAsync(mgr);
 
         items = new ArrayList<>();
 
@@ -683,9 +688,9 @@ public class Camera2Activity extends AppCompatActivity {
             final float[] pixels = getPixel(initClassifiedImg, RESIZED_WIDTH, RESIZED_HEIGHT);
 
             // this is where the magic happens
-            ModelManager.runModelAsync("hiai", pixels);
-            // TODO instead of calling ModelManager.runModelAsync we could use:
-            // DangermodelModel.predictAsync(pixels);
+            //ModelManager.runModelAsync("hiai", pixels);
+            // instead of calling ModelManager.runModelAsync we use:
+            DangermodelModel.predictAsync(pixels);
 
             show = initClassifiedImg;
 
@@ -845,6 +850,23 @@ public class Camera2Activity extends AppCompatActivity {
 //            e.printStackTrace();
 //        }
 //    }
+    public static String[] initLabels(AssetManager mgr) {
+
+        StringBuilder result = new StringBuilder();
+
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(mgr.open("labels.txt")));//Construct a BufferedReader class to read the file
+            String s = null;
+            while((s = br.readLine())!=null){//Use the readLine method to read one line at a time
+                result.append(System.lineSeparator()+s);
+            }
+            br.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return result.toString().trim().split(System.lineSeparator());
+    }
 
     /** Save rgb bitmap as pixel array */
     private float[] getPixel(Bitmap bitmap, int resizedWidth, int resizedHeight) {
@@ -875,7 +897,8 @@ public class Camera2Activity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ModelManager.unloadModelAsync();
+        //ModelManager.unloadModelAsync();
+        DangermodelModel.unloadAsync();
     }
 
 }
