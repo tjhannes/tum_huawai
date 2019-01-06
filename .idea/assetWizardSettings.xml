@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="56" />
+                                                <entry key="scalingPercent" value="45" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,10 +33,10 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundColor" value="a1a69d" />
-                                      <entry key="foregroundImage" value="C:\Users\Johannes\AndroidStudioProjects\Huawei\app\src\main\res\drawable\huawai.png" />
-                                      <entry key="legacyIconShape" value="NONE" />
-                                      <entry key="webIconShape" value="NONE" />
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="efede8" />
+                                      <entry key="backgroundImage" value="C:\Program Files\Android\Android Studio1\plugins\android\lib\templates\gradle-projects\NewAndroidModule\root\res\mipmap-hdpi\ic_launcher.png" />
+                                      <entry key="foregroundImage" value="C:\Users\Johannes\AndroidStudioProjects\Huawei\app\src\main\res\drawable\icon_patron_red.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -48,7 +48,6 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="iconShape" value="NONE" />
                                       <entry key="imageAsset" value="C:\Users\Johannes\AndroidStudioProjects\Huawei\app\src\main\res\drawable\huawai.png" />
                                     </map>
                                   </option>

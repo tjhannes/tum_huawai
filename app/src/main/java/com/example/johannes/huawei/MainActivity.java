@@ -51,11 +51,13 @@ public class MainActivity extends AppCompatActivity {
         textPrediction.setText("Authors: The HuawAI Team, by TUM");
 
         imageLoad = (ImageView) findViewById (R.id.imageLoad);
-        imageLoad.setImageResource(R.drawable.huawai);
+        imageLoad.setImageResource(R.drawable.icon_patron_red);
 
         Button buttonDetectBackground = findViewById(R.id.buttonDetectBackground);
         buttonDetectBackground.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                // geht hier irgendwie nicht
+                // startService(new Intent(this, NotificationService.class));
                 System.exit(0);
             }
         });
@@ -88,6 +90,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onStop() {
+        startService(new Intent(this, NotificationService.class));
+        super.onStop();
+    }
 
     @Override
     public void onDestroy() {
