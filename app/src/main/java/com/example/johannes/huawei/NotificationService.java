@@ -15,7 +15,7 @@ public class NotificationService extends Service {
     Timer timer;
     TimerTask timerTask;
     String TAG = "Timers";
-    int Your_X_SECS = 5;
+    int Your_X_SECS = 20;
     String result = "No Danger";
     boolean danger = false;
 

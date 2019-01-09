@@ -1,15 +1,17 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
     <header
+        android:fragment="com.example.johannes.huawei.SettingsActivity$Prefs2Fragment"
+        android:icon="@drawable/ic_info_black_24dp"
+        android:title="General"
+        android:summary="Change general settings." />
+
+    <header
         android:fragment="com.example.johannes.huawei.SettingsActivity$Prefs1Fragment"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="Notifications"
         android:summary="Change the type of warning message." />
 
-    <header
-        android:fragment="com.example.johannes.huawei.SettingsActivity$Prefs2Fragment"
-        android:icon="@drawable/ic_info_black_24dp"
-        android:title="Other"
-        android:summary="Change settings related to battery and data protection." />
+
 
 </preference-headers>

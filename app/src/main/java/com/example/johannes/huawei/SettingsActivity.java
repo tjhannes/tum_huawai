@@ -65,7 +65,7 @@ public class SettingsActivity extends PreferenceActivity {
             // PreferenceManager.setDefaultValues(getActivity(), R.xml.advanced_preferences, false);
 
             // Load the preferences from an XML resource
-            addPreferencesFromResource(R.xml.pref_notification);
+            addPreferencesFromResource(R.xml.pref_general);
         }
     }
 
@@ -82,7 +82,7 @@ public class SettingsActivity extends PreferenceActivity {
             Log.i("args", "Arguments: " + getArguments());
 
             // Load the preferences from an XML resource
-            addPreferencesFromResource(R.xml.pref_general);
+            addPreferencesFromResource(R.xml.pref_notification);
         }
     }
 }

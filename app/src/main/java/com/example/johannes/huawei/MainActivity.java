@@ -75,24 +75,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        changeBorderColor(getResources().getColor(R.color.colorPrimary));
-
         // wird auch von DetectionActivity geprueft
         requestPermissions();
 
     }
 
-    private void changeBorderColor(int color) {
 
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.container);
-        ShapeDrawable rectShapeDrawable = new ShapeDrawable();
-        // get paint and set border color, stroke and stroke width
-        Paint paint = rectShapeDrawable.getPaint();
-        paint.setColor(color);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(50);
-        layout.setBackground(rectShapeDrawable);
-    }
 
 
     private void requestPermissions() {

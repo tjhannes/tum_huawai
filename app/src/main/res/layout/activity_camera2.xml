@@ -39,7 +39,7 @@
         android:layout_height="112dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:background="@color/colorPrimary">
+        android:background="@android:color/white">
 
         <TextView
             android:id="@+id/textPredict"

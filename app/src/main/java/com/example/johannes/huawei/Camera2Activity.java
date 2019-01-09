@@ -2,10 +2,13 @@ package com.example.johannes.huawei;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.v13.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -168,10 +171,12 @@ public class Camera2Activity extends AppCompatActivity {
                             Math.abs(output[0]-1.0F)<epsilon){
                         View someView = findViewById(R.id.control);
                         someView.setBackgroundColor(getResources().getColor(R.color.colorDanger));
+                        changeBorderColor(getResources().getColor(R.color.colorDanger));
                         // Toast.makeText(Camera2Activity.this, "DANGER!!", Toast.LENGTH_SHORT).show();
                     } else {
                         View someView = findViewById(R.id.control);
-                        someView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        someView.setBackgroundColor(android.R.color.white);
+                        changeBorderColor(getResources().getColor(R.color.colorPrimary));
                     }
 
                     textPredict.setText(Arrays.toString(predictedLabel));
@@ -889,6 +894,18 @@ public class Camera2Activity extends AppCompatActivity {
         }
 
         return buff;
+    }
+
+    private void changeBorderColor(int color) {
+
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.container);
+        ShapeDrawable rectShapeDrawable = new ShapeDrawable();
+        // get paint and set border color, stroke and stroke width
+        Paint paint = rectShapeDrawable.getPaint();
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(50);
+        layout.setBackground(rectShapeDrawable);
     }
 
 
