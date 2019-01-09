@@ -17,6 +17,7 @@ package com.example.johannes.huawei;
 
 import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.os.SystemClock;
 import android.util.Log;

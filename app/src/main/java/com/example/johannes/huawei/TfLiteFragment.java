@@ -471,7 +471,7 @@ public class TfLiteFragment extends Fragment
         }
     }
 
-    /** Opens the camera specified by {@link Camera2BasicFragment#cameraId}. */
+    /** Opens the camera specified by {@link TfLiteFragment#cameraId}. */
     private void openCamera(int width, int height) {
         if (!checkedPermissions && !allPermissionsGranted()) {
             FragmentCompat.requestPermissions(this, getRequiredPermissions(), PERMISSIONS_REQUEST_CODE);
@@ -677,7 +677,7 @@ public class TfLiteFragment extends Fragment
         String textToShow = classifier.classifyFrame(bitmap);
         Log.d(TAG, String.valueOf(classifier.bestLabel));
         Log.d(TAG, String.valueOf(classifier.bestWeight));
-        if (classifier.bestWeight > (float) 0.80) {
+        if (classifier.bestWeight > (float) 0.20) {
             detectionBar.setBackgroundColor(getResources().getColor(R.color.colorDetection));
             Product product = findProduct(classifier.bestLabel);
             detectionBar.setText(product.getName());
