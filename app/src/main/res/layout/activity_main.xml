@@ -8,9 +8,21 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="@drawable/my_custom_background"
     android:id="@+id/container"
     tools:context=".MainActivity">
+    <!--android:background="@drawable/my_border"-->
+
+    <TextView
+        android:id="@+id/textSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/settings"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@+id/settings"
+        android:text="Settings"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:onClick="changeSettings"/>
 
     <ImageView
         android:id="@+id/settings"
@@ -20,6 +32,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
+        android:onClick="changeSettings"
         app:srcCompat="@drawable/settings" />
 
     <ImageView

@@ -1,0 +1,73 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Battery">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="battery_gps"
+            android:summary="The usage of GPS enables less battery consumption."
+            android:title="Use GPS sensor" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="battery_gyro"
+            android:summary="The usage of the Gyro sensor enables less battery consumption."
+            android:title="Use Gyro sensor" />
+
+        <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+                 dismiss it. -->
+        <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+        <ListPreference
+            android:defaultValue="10"
+            android:key="sync_frequency"
+            android:title="Frequency of danger detection from camera"
+            android:summary="Adjust how frequent Patron should classify an image from the camera."
+            android:entries="@array/pref_sync_frequency_titles"
+            android:entryValues="@array/pref_sync_frequency_values"
+            android:dialogTitle="Frequency of danger detection" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Data">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="data_improve"
+            android:summary="If you check this option, we will use some of your data to improve our machine learning model. This especially helps to improve the detection accuracy in your neighbourhood, as we can train the model to your image data."
+            android:title="Help to improve the danger detection" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="About">
+
+        <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+        <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+        <EditTextPreference
+            android:capitalize="words"
+            android:defaultValue="Deer Guardian"
+            android:inputType="textCapWords"
+            android:key="my_app_name"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Change the name of your Patron" />
+
+        <!-- This PreferenceScreen tag sends the user to a completely different
+                     activity (here a webpage), switching out of the current preferences UI. -->
+        <PreferenceScreen
+            android:title="More information"
+            android:summary="For more information check our website">
+
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://techchallenge.de/" />
+
+        </PreferenceScreen>
+
+        <Preference
+            android:key="feedback"
+            android:title="Send feedback"
+            android:summary="Report technical issues or suggest new features"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

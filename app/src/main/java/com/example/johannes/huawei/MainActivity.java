@@ -3,14 +3,23 @@ package com.example.johannes.huawei;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /*
@@ -31,9 +40,13 @@ public class MainActivity extends AppCompatActivity {
 
         // launch neural net activity
         Intent intent = new Intent(this, Camera2Activity.class);
-
         Log.d(LOG_TAG, "Start HiAI Foundation");
+        startActivity(intent);
+    }
 
+    public void changeSettings(View view) {
+
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
@@ -62,12 +75,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        changeBorderColor(getResources().getColor(R.color.colorPrimary));
+
         // wird auch von DetectionActivity geprueft
         requestPermissions();
 
+    }
 
+    private void changeBorderColor(int color) {
 
-
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.container);
+        ShapeDrawable rectShapeDrawable = new ShapeDrawable();
+        // get paint and set border color, stroke and stroke width
+        Paint paint = rectShapeDrawable.getPaint();
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(50);
+        layout.setBackground(rectShapeDrawable);
     }
 
 

@@ -18,7 +18,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -28,12 +27,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Camera2Activity"
-            android:parentActivityName=".MainActivity"
-            android:label="Patron activated">
-        </activity>
+            android:label="Patron activated"
+            android:parentActivityName=".MainActivity" />
 
         <service
             android:name=".NotificationService"
@@ -45,8 +42,10 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Settings" />
+
     </application>
-
-
 
 </manifest>

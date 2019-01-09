@@ -1,0 +1,62 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+            android:title="Notification"
+        android:summary="Choose the kind of warning message which you want to receive when Patron detects a possibly dangerous situation.">
+
+        <!-- A 'parent' preference, which enables/disables child preferences (below)
+     when checked/unchecked. -->
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="notifications_allowed"
+            android:title="Allow notifications" />
+
+        <!-- Allows the user to choose a ringtone in the 'notification' category. -->
+        <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+        <!-- NOTE: RingtonePreference's summary should be set to its value by the activity code. -->
+        <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+        <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:dependency="notifications_allowed"
+            android:key="notifications_ringtone"
+            android:ringtoneType="notification"
+            android:title="Choose alarm sound" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="notifications_allowed"
+            android:key="notifications_ringtone_allow"
+            android:title="Alarm sound" />
+
+        <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="notifications_allowed"
+            android:key="notifications_vibrate"
+            android:title="Vibration" />
+
+        <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="notifications_allowed"
+            android:key="notifications_border"
+            android:title="Show red border" />
+
+        <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="notifications_allowed"
+            android:key="notifications_note"
+            android:title="Show notification message on screen" />
+
+        <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="notifications_allowed"
+            android:key="notifications_lock"
+            android:title="Lock smartphone" />
+
+
+
+        </PreferenceCategory>
+
+</PreferenceScreen>

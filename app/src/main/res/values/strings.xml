@@ -1,8 +1,22 @@
 <resources>
     <string name="app_name">Patron</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <!-- used by Camera.java (tf lite) -->
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+
+    <!-- Strings related to Settings -->
+    <string-array name="pref_sync_frequency_titles">
+        <item>5 images per second</item>
+        <item>2 images per second</item>
+        <item>1 image per second</item>
+        <item>1 image every 2 seconds</item>
+        <item>1 image every 3 seconds</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>50</item>
+        <item>20</item>
+        <item>10</item>
+        <item>5</item>
+        <item>3</item>
+    </string-array>
+
 </resources>
