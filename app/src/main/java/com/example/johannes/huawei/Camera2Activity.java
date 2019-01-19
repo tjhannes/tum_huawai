@@ -75,12 +75,12 @@ public class Camera2Activity extends AppCompatActivity {
     private static final int MAX_PREVIEW_HEIGHT = 1080;
     /** This size is taken from the Camera Stream of TextureView and sent to model for classification */
     // TODO change to our model size
-    static final int DIM_IMG_SIZE_X = 128;
-    static final int DIM_IMG_SIZE_Y = 128;
+    static final int DIM_IMG_SIZE_X = 224;
+    static final int DIM_IMG_SIZE_Y = 224;
 
     // TODO change size //227 width and height
-    public static final int RESIZED_WIDTH = 128;
-    public static final int RESIZED_HEIGHT = 128;
+    public static final int RESIZED_WIDTH = 224;
+    public static final int RESIZED_HEIGHT = 224;
     public static final double meanValueOfBlue = 103.939;
     public static final double meanValueOfGreen = 116.779;
     public static final double meanValueOfRed = 123.68;
@@ -147,9 +147,9 @@ public class Camera2Activity extends AppCompatActivity {
         @Override
         public void onRunDone(final int taskId, final float[] output) {
 
-//            for (int i = 0; i < output.length; i++) {
-//                Log.e(TAG, "java layer onRunDone: output[" + i + "]:" + output[i]);
-//            }
+            for (int i = 0; i < output.length; i++) {
+                Log.e(TAG, "java layer onRunDone: output[" + i + "]:" + output[i]);
+            }
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -166,16 +166,15 @@ public class Camera2Activity extends AppCompatActivity {
                     }
 
                     // two floats are equal if smaller than epsilon
-                    float epsilon = 0.001F;
-                    if (predictedLabel[0].equals("danger--1.0%") ||
-                            Math.abs(output[0]-1.0F)<epsilon){
+                    float treshold = 0.7F;
+                    if (output[0] > treshold){
                         View someView = findViewById(R.id.control);
                         someView.setBackgroundColor(getResources().getColor(R.color.colorDanger));
                         changeBorderColor(getResources().getColor(R.color.colorDanger));
                         // Toast.makeText(Camera2Activity.this, "DANGER!!", Toast.LENGTH_SHORT).show();
                     } else {
                         View someView = findViewById(R.id.control);
-                        someView.setBackgroundColor(android.R.color.white);
+                        someView.setBackgroundColor(getResources().getColor(android.R.color.white));
                         changeBorderColor(getResources().getColor(R.color.colorPrimary));
                     }
 
@@ -654,15 +653,20 @@ public class Camera2Activity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-    /** Takes photos and classify them periodically. */
+    long period = System.currentTimeMillis();
+    /** Takes photos and classify them periodically.
+     *  additionally waits e.g. 0,1sec for next classification */
     private Runnable periodicClassify =
             new Runnable() {
                 @Override
                 public void run() {
                     synchronized (lock) {
                         if (runClassifier) {
-                            classifyFrame();
+                            long currentperiod = System.currentTimeMillis()-period;
+                            if (currentperiod > 100L) {
+                                period = System.currentTimeMillis();
+                                classifyFrame();
+                            }
                         }
                     }
                     backgroundHandler.post(periodicClassify);

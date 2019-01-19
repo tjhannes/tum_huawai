@@ -23,7 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /*
-* Main Activity zum Starten der Detection Activity
+* Main Activity zum Starten der Camera Activity und für Settings
 *
 * */
 
