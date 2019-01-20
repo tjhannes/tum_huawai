@@ -9,11 +9,11 @@ public class DangermodelModel {
 
     /**** user load model manager sync interfaces ****/
     public static int load(AssetManager mgr){
-            return ModelManager.loadModelSync("Danger", mgr);
+            return ModelManager.loadModelSync("DangerDemo", mgr);
     }
 
     public static float[] predict(float[] buf){
-        return ModelManager.runModelSync("Danger",buf);
+        return ModelManager.runModelSync("DangerDemo",buf);
     }
 
     public static int unload(){
@@ -27,11 +27,11 @@ public class DangermodelModel {
     }
 
     public static void loadAsync(AssetManager mgr){
-        ModelManager.loadModelAsync("Danger", mgr);
+        ModelManager.loadModelAsync("DangerDemo", mgr);
     }
 
     public static void predictAsync(float[] buf) {
-        ModelManager.runModelAsync("Danger",buf);
+        ModelManager.runModelAsync("DangerDemo",buf);
     }
 
     public static void unloadAsync(){

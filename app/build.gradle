@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
 
 assert file(project.ext.ASSET_DIR + "/Danger.cambricon").exists()
+assert file(project.ext.ASSET_DIR + "/DangerDemo.cambricon").exists()
 assert file(project.ext.ASSET_DIR + "/labels.txt").exists()
 
 android {

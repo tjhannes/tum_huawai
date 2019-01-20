@@ -166,7 +166,7 @@ public class Camera2Activity extends AppCompatActivity {
                     }
 
                     // two floats are equal if smaller than epsilon
-                    float treshold = 0.7F;
+                    float treshold = 0.99F;
                     if (output[0] > treshold){
                         View someView = findViewById(R.id.control);
                         someView.setBackgroundColor(getResources().getColor(R.color.colorDanger));
@@ -663,7 +663,7 @@ public class Camera2Activity extends AppCompatActivity {
                     synchronized (lock) {
                         if (runClassifier) {
                             long currentperiod = System.currentTimeMillis()-period;
-                            if (currentperiod > 100L) {
+                            if (currentperiod > 500L) {
                                 period = System.currentTimeMillis();
                                 classifyFrame();
                             }
