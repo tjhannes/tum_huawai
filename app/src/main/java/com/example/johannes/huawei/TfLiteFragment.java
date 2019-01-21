@@ -312,8 +312,6 @@ public class TfLiteFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
         try {
             classifier = new ImageClassifier(getActivity());
-            // Load dummy data from the JSON file
-            parseJSON();
         } catch (IOException e) {
             Log.e(TAG, "Failed to initialize an image classifier.");
         }
@@ -631,6 +629,16 @@ public class TfLiteFragment extends Fragment
         textureView.setTransform(matrix);
     }
 
+    /** Compares two {@code Size}s based on their areas. */
+    private static class CompareSizesByArea implements Comparator<Size> {
+
+        @Override
+        public int compare(Size lhs, Size rhs) {
+            // We cast here to ensure the multiplications won't overflow
+            return Long.signum(
+                    (long) lhs.getWidth() * lhs.getHeight() - (long) rhs.getWidth() * rhs.getHeight());
+        }
+    }
 
     /** Starts a background thread and its {@link Handler}. */
     private void startBackgroundThread() {
@@ -701,63 +709,24 @@ public class TfLiteFragment extends Fragment
         bitmap.recycle();
     }
 
-    //ArrayList<Product> productModelList;
-
-    private String loadJSONFromAssets(){
-        String json = null;
-        try {
-
-            InputStream is = getActivity().getAssets().open("dummy_data.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            return null;
-        }
-        Log.d(TAG, json);
-        return json;
-    }
-
-    private void parseJSON() {
-        Gson gson = new Gson();
-        //Type type = new TypeToken<ArrayList<Product>>(){}.getType();
-        //productModelList = gson.fromJson(loadJSONFromAssets(), type);
-    }
-
-//    private Product findProduct(String barcode) {
-//        for(Product product : productModelList) {
-//            if(product.getBarcode().equals(barcode)){
-//                return product;
-//            }
-//        }
-//
-//        return new Product("000000000000", "Product not found", "0.00", "Product not found");
-//    }
-
     private void changeBorderColor(int color) {
 
-        ShapeDrawable rectShapeDrawable = new ShapeDrawable();
+        final ShapeDrawable rectShapeDrawable = new ShapeDrawable();
         // get paint and set border color, stroke and stroke width
         Paint paint = rectShapeDrawable.getPaint();
         paint.setColor(color);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(50);
-        // TODO runonuithread
-        //layout.setBackground(rectShapeDrawable);
-    }
-
-
-    /** Compares two {@code Size}s based on their areas. */
-    private static class CompareSizesByArea implements Comparator<Size> {
-
-        @Override
-        public int compare(Size lhs, Size rhs) {
-            // We cast here to ensure the multiplications won't overflow
-            return Long.signum(
-                    (long) lhs.getWidth() * lhs.getHeight() - (long) rhs.getWidth() * rhs.getHeight());
+        final Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(
+                    new Runnable() {
+                        @Override
+                        public void run() { layout.setBackground(rectShapeDrawable);
+                        }
+                    });
         }
+        //layout.setBackground(rectShapeDrawable);
     }
 
     /** Shows an error message dialog. */
