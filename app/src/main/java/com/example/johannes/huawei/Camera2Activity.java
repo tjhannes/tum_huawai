@@ -75,12 +75,12 @@ public class Camera2Activity extends AppCompatActivity {
     private static final int MAX_PREVIEW_HEIGHT = 1080;
     /** This size is taken from the Camera Stream of TextureView and sent to model for classification */
     // TODO change to our model size
-    static final int DIM_IMG_SIZE_X = 224;
-    static final int DIM_IMG_SIZE_Y = 224;
+    static final int DIM_IMG_SIZE_X = 128;
+    static final int DIM_IMG_SIZE_Y = 128;
 
     // TODO change size //227 width and height
-    public static final int RESIZED_WIDTH = 224;
-    public static final int RESIZED_HEIGHT = 224;
+    public static final int RESIZED_WIDTH = 128;
+    public static final int RESIZED_HEIGHT = 128;
     public static final double meanValueOfBlue = 103.939;
     public static final double meanValueOfGreen = 116.779;
     public static final double meanValueOfRed = 123.68;

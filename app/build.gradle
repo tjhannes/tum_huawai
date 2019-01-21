@@ -3,8 +3,10 @@ apply plugin: 'com.android.application'
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
 
 assert file(project.ext.ASSET_DIR + "/Danger.cambricon").exists()
-assert file(project.ext.ASSET_DIR + "/DangerDemo.cambricon").exists()
+assert file(project.ext.ASSET_DIR + "/DangerDemoSimple.cambricon").exists()
 assert file(project.ext.ASSET_DIR + "/labels.txt").exists()
+assert file(project.ext.ASSET_DIR + "/DangerDemo.tflite").exists()
+assert file(project.ext.ASSET_DIR + "/DangerDemo.txt").exists()
 
 android {
     compileSdkVersion 26
@@ -32,6 +34,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    aaptOptions {
+        noCompress "tflite"
+        noCompress "lite"
+    }
     externalNativeBuild {
         cmake {
             path "CMakeLists.txt"
@@ -58,6 +64,7 @@ dependencies {
     implementation 'com.android.support:support-v13:26.1.0'
 
     implementation(name: 'vision-oversea-release', ext: 'aar')
+    implementation 'org.tensorflow:tensorflow-lite:+'
 
     implementation 'com.android.support:support-v4:26.1.0'
     testImplementation 'junit:junit:4.12'

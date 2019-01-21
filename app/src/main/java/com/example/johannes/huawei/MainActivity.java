@@ -38,9 +38,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void startDetection(View view) {
 
-        // launch neural net activity
+        // launch hiai activity
         Intent intent = new Intent(this, Camera2Activity.class);
         Log.d(LOG_TAG, "Start HiAI Foundation");
+        startActivity(intent);
+    }
+
+    public void startTfLite(View view) {
+
+        // launch tensorflow activity
+        Intent intent = new Intent(this, TfLiteActivity.class);
+        Log.d(LOG_TAG, "Start Tensorflow");
         startActivity(intent);
     }
 

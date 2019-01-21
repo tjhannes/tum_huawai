@@ -54,8 +54,22 @@
         android:layout_weight="1"
         android:layout_centerHorizontal="true"
         android:background="@drawable/btn_bg"
-        android:text="Start Detection"
+        android:text="Start Detection with HiAI"
         android:onClick="startDetection"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/buttonTf"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageLoad"
+        android:layout_alignEnd="@+id/imageLoad"
+        android:layout_marginTop="70dp"
+        android:layout_weight="1"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/btn_bg"
+        android:text="Tensorflow"
+        android:onClick="startTfLite"
         android:textAllCaps="false" />
 
     <Button
