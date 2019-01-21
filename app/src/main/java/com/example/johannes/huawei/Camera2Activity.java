@@ -78,7 +78,7 @@ public class Camera2Activity extends AppCompatActivity {
     static final int DIM_IMG_SIZE_X = 128;
     static final int DIM_IMG_SIZE_Y = 128;
 
-    // TODO change size //227 width and height
+    // TODO change size
     public static final int RESIZED_WIDTH = 128;
     public static final int RESIZED_HEIGHT = 128;
     public static final double meanValueOfBlue = 103.939;
@@ -94,6 +94,7 @@ public class Camera2Activity extends AppCompatActivity {
     private boolean runClassifier = false;
     private boolean checkedPermissions = false;
     private TextView textPredict;
+    private View resultBar;
 
     /** ID of the current {@link CameraDevice}. */
     private String cameraId;
@@ -118,8 +119,6 @@ public class Camera2Activity extends AppCompatActivity {
     private CaptureRequest previewRequest;
     /** A {@link Semaphore} to prevent the app from exiting before closing the camera. */
     private Semaphore cameraOpenCloseLock = new Semaphore(1);
-
-    // private ImageClassifier classifier; (tf)
 
     /*
      * implementiert die Grundfunktionen des ModelManagerListeners:
@@ -165,20 +164,20 @@ public class Camera2Activity extends AppCompatActivity {
                         predictedLabel[i] = labels[i] + "--" + value*100 + "%";
                     }
 
-                    // two floats are equal if smaller than epsilon
-                    float treshold = 0.99F;
+                    // set treshold for classifier, in case of two classes only 0 and 1
+                    float treshold = 0.2F;
                     if (output[0] > treshold){
-                        View someView = findViewById(R.id.control);
-                        someView.setBackgroundColor(getResources().getColor(R.color.colorDanger));
+                        resultBar.setBackgroundColor(getResources().getColor(R.color.colorDanger));
                         changeBorderColor(getResources().getColor(R.color.colorDanger));
                         // Toast.makeText(Camera2Activity.this, "DANGER!!", Toast.LENGTH_SHORT).show();
+                        textPredict.setText("Danger");
                     } else {
-                        View someView = findViewById(R.id.control);
-                        someView.setBackgroundColor(getResources().getColor(android.R.color.white));
+                        resultBar.setBackgroundColor(getResources().getColor(android.R.color.white));
                         changeBorderColor(getResources().getColor(R.color.colorPrimary));
+                        textPredict.setText("No Danger");
                     }
-
-                    textPredict.setText(Arrays.toString(predictedLabel));
+                    // for more details on the prediction
+                    // textPredict.setText(Arrays.toString(predictedLabel));
                 }
             });
         }
@@ -373,6 +372,7 @@ public class Camera2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_camera2);
 
         textureView = (AutoFitTextureView) findViewById(R.id.texture);
+        resultBar = (View) findViewById(R.id.control);
         textPredict = (TextView) findViewById(R.id.textPredict);
         textPredict.setText("Init");
 
@@ -901,7 +901,7 @@ public class Camera2Activity extends AppCompatActivity {
     }
 
     private void changeBorderColor(int color) {
-
+        // TODO refactor
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.container);
         ShapeDrawable rectShapeDrawable = new ShapeDrawable();
         // get paint and set border color, stroke and stroke width

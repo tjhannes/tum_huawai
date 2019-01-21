@@ -29,9 +29,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.ShapeDrawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -55,6 +57,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,8 +92,9 @@ public class TfLiteFragment extends Fragment
     private boolean runClassifier = false;
     private boolean checkedPermissions = false;
     private TextView textView;
-    private TextView detectionBar;
+    private View resultBar;
     private ImageClassifier classifier;
+    private RelativeLayout layout;
 
     /** Max preview width that is guaranteed by Camera2 API */
     private static final int MAX_PREVIEW_WIDTH = 1920;
@@ -296,9 +300,10 @@ public class TfLiteFragment extends Fragment
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
-        textView = (TextView) view.findViewById(R.id.text);
-        detectionBar = (TextView) view.findViewById(R.id.detectionBar);
-        // detectionBar.setBackgroundColor(getResources().getColor(R.color.colorDetection));
+        layout = (RelativeLayout) view.findViewById(R.id.containerTf);
+        textView = (TextView) view.findViewById(R.id.textPredict);
+        resultBar = view.findViewById(R.id.control);
+        resultBar = (View) view.findViewById(R.id.control);
     }
 
     /** Load the model and labels. */
@@ -536,46 +541,6 @@ public class TfLiteFragment extends Fragment
         }
     }
 
-    /** Starts a background thread and its {@link Handler}. */
-    private void startBackgroundThread() {
-        backgroundThread = new HandlerThread(HANDLE_THREAD_NAME);
-        backgroundThread.start();
-        backgroundHandler = new Handler(backgroundThread.getLooper());
-        synchronized (lock) {
-            runClassifier = true;
-        }
-        backgroundHandler.post(periodicClassify);
-    }
-
-    /** Stops the background thread and its {@link Handler}. */
-    private void stopBackgroundThread() {
-        backgroundThread.quitSafely();
-        try {
-            backgroundThread.join();
-            backgroundThread = null;
-            backgroundHandler = null;
-            synchronized (lock) {
-                runClassifier = false;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /** Takes photos and classify them periodically. */
-    private Runnable periodicClassify =
-            new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (lock) {
-                        if (runClassifier) {
-                            classifyFrame();
-                        }
-                    }
-                    backgroundHandler.post(periodicClassify);
-                }
-            };
-
     /** Creates a new {@link CameraCaptureSession} for camera preview. */
     private void createCameraPreviewSession() {
         try {
@@ -666,6 +631,47 @@ public class TfLiteFragment extends Fragment
         textureView.setTransform(matrix);
     }
 
+
+    /** Starts a background thread and its {@link Handler}. */
+    private void startBackgroundThread() {
+        backgroundThread = new HandlerThread(HANDLE_THREAD_NAME);
+        backgroundThread.start();
+        backgroundHandler = new Handler(backgroundThread.getLooper());
+        synchronized (lock) {
+            runClassifier = true;
+        }
+        backgroundHandler.post(periodicClassify);
+    }
+
+    /** Stops the background thread and its {@link Handler}. */
+    private void stopBackgroundThread() {
+        backgroundThread.quitSafely();
+        try {
+            backgroundThread.join();
+            backgroundThread = null;
+            backgroundHandler = null;
+            synchronized (lock) {
+                runClassifier = false;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** Takes photos and classify them periodically. */
+    private Runnable periodicClassify =
+            new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (lock) {
+                        if (runClassifier) {
+                            classifyFrame();
+                        }
+                    }
+                    backgroundHandler.post(periodicClassify);
+                }
+            };
+
     /** Classifies a frame from the preview stream. */
     private void classifyFrame() {
         if (classifier == null || getActivity() == null || cameraDevice == null) {
@@ -678,17 +684,21 @@ public class TfLiteFragment extends Fragment
         Log.d(TAG, String.valueOf(classifier.bestLabel));
         Log.d(TAG, String.valueOf(classifier.bestWeight));
         if (classifier.bestWeight > (float) 0.20) {
-            detectionBar.setBackgroundColor(getResources().getColor(R.color.colorDetection));
-            //Product product = findProduct(classifier.bestLabel);
-            //detectionBar.setText(product.getName());
-            detectionBar.setText(classifier.bestLabel);
+            if (classifier.bestLabel.equals("danger")) {
+                resultBar.setBackgroundColor(getResources().getColor(R.color.colorDanger));
+                changeBorderColor(getResources().getColor(R.color.colorDanger));
+            } else {
+                resultBar.setBackgroundColor(getResources().getColor(android.R.color.white));
+                changeBorderColor(getResources().getColor(R.color.colorPrimary));
+            }
+            // showToast sets Text for textPredict on UiThread
+            showToast(classifier.bestLabel);
 
         } else {
-            detectionBar.setBackgroundColor(Color.TRANSPARENT);
-            detectionBar.setText("");
+            resultBar.setBackgroundColor(Color.TRANSPARENT);
+            showToast("");
         }
         bitmap.recycle();
-        showToast(textToShow);
     }
 
     //ArrayList<Product> productModelList;
@@ -725,6 +735,18 @@ public class TfLiteFragment extends Fragment
 //
 //        return new Product("000000000000", "Product not found", "0.00", "Product not found");
 //    }
+
+    private void changeBorderColor(int color) {
+
+        ShapeDrawable rectShapeDrawable = new ShapeDrawable();
+        // get paint and set border color, stroke and stroke width
+        Paint paint = rectShapeDrawable.getPaint();
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(50);
+        // TODO runonuithread
+        //layout.setBackground(rectShapeDrawable);
+    }
 
 
     /** Compares two {@code Size}s based on their areas. */

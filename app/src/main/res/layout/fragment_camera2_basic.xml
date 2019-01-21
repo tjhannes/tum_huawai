@@ -15,71 +15,36 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/containerTf">
 
     <com.example.johannes.huawei.AutoFitTextureView
         android:id="@+id/texture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true" />
+        android:layout_margin="8dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"/>
 
     <FrameLayout
         android:id="@+id/control"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_alignStart="@+id/texture"
+        android:layout_height="112dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:background="@color/colorPrimary">
+        android:background="@android:color/transparent">
 
         <TextView
-            android:id="@+id/text"
+            android:id="@+id/textPredict"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="80dp"
+            android:text="Init"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
+            android:textStyle="bold" />
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/detectionBar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="12dp"
-        android:background="@android:color/transparent"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:visibility="invisible">
-
-        <Button
-            android:id="@+id/scanBarcode"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_weight="1"
-            android:onClick="showScanBarcode"
-            android:text="Scan Barcode" />
-
-        <Button
-            android:id="@+id/shoppingCart"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_weight="1"
-            android:onClick="showShopingCart"
-            android:text="Shopping Cart" />
-
-    </LinearLayout>
 
 </RelativeLayout>

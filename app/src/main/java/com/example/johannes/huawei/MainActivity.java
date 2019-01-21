@@ -77,9 +77,8 @@ public class MainActivity extends AppCompatActivity {
         Button buttonDetectBackground = findViewById(R.id.buttonDetectBackground);
         buttonDetectBackground.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // geht hier irgendwie nicht
-                // startService(new Intent(this, NotificationService.class));
-                System.exit(0);
+
+                startService(new Intent(MainActivity.this, NotificationService.class));
             }
         });
 
@@ -112,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        startService(new Intent(this, NotificationService.class));
         super.onStop();
     }
 
