@@ -42,7 +42,7 @@
         android:layout_below="@+id/settings"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:onClick="startDetection"
+        android:onClick="startTfLite"
         app:srcCompat="@drawable/ic_launcher_background" />
 
     <Button
@@ -69,6 +69,7 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/btn_bg"
         android:text="Tensorflow"
+        android:visibility="invisible"
         android:onClick="startTfLite"
         android:textAllCaps="false" />
 

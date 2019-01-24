@@ -75,15 +75,17 @@ public class Camera2Activity extends AppCompatActivity {
     private static final int MAX_PREVIEW_HEIGHT = 1080;
     /** This size is taken from the Camera Stream of TextureView and sent to model for classification */
     // TODO change to our model size
-    static final int DIM_IMG_SIZE_X = 128;
-    static final int DIM_IMG_SIZE_Y = 128;
+    static final int DIM_IMG_SIZE_X = 224;
+    static final int DIM_IMG_SIZE_Y = 224;
 
     // TODO change size
-    public static final int RESIZED_WIDTH = 128;
-    public static final int RESIZED_HEIGHT = 128;
-    public static final double meanValueOfBlue = 103.939;
-    public static final double meanValueOfGreen = 116.779;
-    public static final double meanValueOfRed = 123.68;
+    public static final int RESIZED_WIDTH = 224;
+    public static final int RESIZED_HEIGHT = 224;
+    // used for image preprocessing, i.e. normalization of images to (-1,1)
+    // inception uses 128, mobilenet 127.5, alexnet (103.939,116.779,123.68), own model 255
+    public static final double meanValueOfBlue = 127.5;
+    public static final double meanValueOfGreen = 127.5;
+    public static final double meanValueOfRed = 127.5;
 
     private List<ClassifyItemModel> items;
     private Bitmap show;
@@ -891,9 +893,10 @@ public class Camera2Activity extends AppCompatActivity {
 
                 int color = bitmap.getPixel(j, i);
 
-                buff[bIndex] = (float) (blue(color) - meanValueOfBlue);
-                buff[gIndex] = (float) (green(color) - meanValueOfGreen);
-                buff[rIndex] = (float) (red(color) - meanValueOfRed);
+                // mobilenet
+                buff[bIndex] = (float)((float) (blue(color) - meanValueOfBlue)/meanValueOfBlue);
+                buff[gIndex] = (float)((float) (green(color) - meanValueOfGreen)/meanValueOfGreen);
+                buff[rIndex] = (float)((float) (red(color) - meanValueOfRed)/meanValueOfRed);
             }
         }
 
