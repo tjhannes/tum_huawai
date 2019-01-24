@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 startService(new Intent(MainActivity.this, NotificationService.class));
+                startService(new Intent(MainActivity.this, DemoCamService.class));
             }
         });
 

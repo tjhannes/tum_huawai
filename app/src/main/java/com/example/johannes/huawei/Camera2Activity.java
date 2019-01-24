@@ -591,7 +591,9 @@ public class Camera2Activity extends AppCompatActivity {
 
     private boolean allPermissionsGranted() {
         for (String permission : getRequiredPermissions()) {
-            if (ContextCompat.checkSelfPermission(this, permission)
+            if (permission.equals("android.permission.SYSTEM_ALERT_WINDOW")){
+                // do not check overdraw rights, because it is already checked in democamservice
+            } else if (ContextCompat.checkSelfPermission(this, permission)
                     != PackageManager.PERMISSION_GRANTED) {
                 return false;
             }
