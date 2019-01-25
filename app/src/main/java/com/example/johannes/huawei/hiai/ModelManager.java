@@ -1,4 +1,4 @@
-package com.example.johannes.huawei;
+package com.example.johannes.huawei.hiai;
 
 import android.content.res.AssetManager;
 import android.util.Log;

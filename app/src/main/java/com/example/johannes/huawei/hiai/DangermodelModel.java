@@ -1,7 +1,9 @@
-package com.example.johannes.huawei;
+package com.example.johannes.huawei.hiai;
 
 import android.content.res.AssetManager;
-import android.util.Log;
+
+import com.example.johannes.huawei.hiai.ModelManager;
+import com.example.johannes.huawei.hiai.ModelManagerListener;
 
 
 public class DangermodelModel {

@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-package com.example.johannes.huawei;
+package com.example.johannes.huawei.tensorflow;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -61,12 +61,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.example.johannes.huawei.utils.AutoFitTextureView;
+import com.example.johannes.huawei.R;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -702,7 +700,7 @@ public class TfLiteFragment extends Fragment
                 changeBorderColor(getResources().getColor(R.color.colorPrimary));
             }
             // showToast sets Text for textPredict on UiThread
-            showToast(classifier.bestLabel);
+            showToast(classifier.bestLabel+"--"+classifier.bestWeight);
 
         } else {
             resultBar.setBackgroundColor(Color.TRANSPARENT);

@@ -130,7 +130,7 @@ void onRunDone(void *userdata, int taskStamp) {
 
     float *outputBuffer = (float *) listener.userdata;
 
-    //Todo: Modify to your own data(category) //1000
+    //Todo: Modify to your own data(category)
     int outputSize = 2;
 
 //    softmax(outputBuffer,outputSize);
@@ -227,7 +227,7 @@ void onServiceDied(void *userdata) {
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_example_johannes_huawei_ModelManager_registerListenerJNI(JNIEnv *env, jclass type,
+Java_com_example_johannes_huawei_hiai_ModelManager_registerListenerJNI(JNIEnv *env, jclass type,
                                                           jobject callbacks) {
 
     callbacksInstance = env->NewGlobalRef(callbacks);
@@ -250,7 +250,7 @@ Java_com_example_johannes_huawei_ModelManager_registerListenerJNI(JNIEnv *env, j
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_johannes_huawei_ModelManager_loadModelAsync(JNIEnv *env, jclass type,
+Java_com_example_johannes_huawei_hiai_ModelManager_loadModelAsync(JNIEnv *env, jclass type,
                                                      jstring jmodelName, jobject assetManager) {
     const char *modelName = env->GetStringUTFChars(jmodelName, 0);
     model_name=modelName;
@@ -300,7 +300,7 @@ Java_com_example_johannes_huawei_ModelManager_loadModelAsync(JNIEnv *env, jclass
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_johannes_huawei_ModelManager_runModelAsync(JNIEnv *env, jclass type,
+Java_com_example_johannes_huawei_hiai_ModelManager_runModelAsync(JNIEnv *env, jclass type,
                                                     jstring jmodelName, jfloatArray jbuf) {
     const char *modelName = env->GetStringUTFChars(jmodelName, 0);
 
@@ -316,12 +316,12 @@ Java_com_example_johannes_huawei_ModelManager_runModelAsync(JNIEnv *env, jclass 
         dataBuff = env->GetFloatArrayElements(jbuf, NULL);
     }
 
-    //Todo: modify input tensor //
+    //Todo: modify input tensor
     inputtensor = HIAI_TensorBuffer_create(input_N, input_C, input_H, input_W);
 
     HIAI_TensorBuffer *inputtensorbuffer[] = {inputtensor};
 
-    //Todo: modify  output tensor //
+    //Todo: modify  output tensor
     outputtensor = HIAI_TensorBuffer_create(output_N, output_C, output_H, output_W);
 
     HIAI_TensorBuffer *outputtensorbuffer[] = {outputtensor};
@@ -336,7 +336,7 @@ Java_com_example_johannes_huawei_ModelManager_runModelAsync(JNIEnv *env, jclass 
 
     gettimeofday(&tpstart, NULL);
 
-    //Todo: modify runModel parameter //1000
+    //Todo: modify runModel parameter
     int ret = HIAI_ModelManager_runModel(
             modelManager,
             inputtensorbuffer,
@@ -360,7 +360,7 @@ Java_com_example_johannes_huawei_ModelManager_runModelAsync(JNIEnv *env, jclass 
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_johannes_huawei_ModelManager_unloadModelAsync(JNIEnv *env, jclass type) {
+Java_com_example_johannes_huawei_hiai_ModelManager_unloadModelAsync(JNIEnv *env, jclass type) {
     if (NULL == modelManager) {
         LOGE("please load model first");
 

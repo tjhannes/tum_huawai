@@ -1,4 +1,4 @@
-package com.example.johannes.huawei;
+package com.example.johannes.huawei.utils;
 
 /* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
 

@@ -1,4 +1,4 @@
-package com.example.johannes.huawei;
+package com.example.johannes.huawei.utils;
 
 import android.widget.Toast;
 

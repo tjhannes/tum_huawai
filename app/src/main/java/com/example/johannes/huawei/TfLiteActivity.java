@@ -3,6 +3,8 @@ package com.example.johannes.huawei;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.johannes.huawei.tensorflow.TfLiteFragment;
+
 
 public class TfLiteActivity extends AppCompatActivity {
 

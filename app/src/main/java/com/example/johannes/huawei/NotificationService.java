@@ -5,19 +5,23 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.example.johannes.huawei.tensorflow.DemoCamService;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+/*
+ *
+ * Starts a TimerTask Service which calls the {@link DemoCamService} every x seconds
+ *
+ * */
 public class NotificationService extends Service {
 
     Timer timer;
     TimerTask timerTask;
     String TAG = "Timers";
-    int Your_X_SECS = 20;
-    String result = "No Danger";
-    boolean danger = false;
+    int Your_X_SECS = 4;
 
 
     @Override
@@ -63,8 +67,8 @@ public class NotificationService extends Service {
         //initialize the TimerTask's job
         initializeTimerTask();
 
-        //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-        timer.schedule(timerTask, 5000, Your_X_SECS * 1000); //
+        //schedule the timer, after the first 1000ms the TimerTask will run every 10000ms
+        timer.schedule(timerTask, 1000, Your_X_SECS * 1000); //
         //timer.schedule(timerTask, 5000,1000); //
     }
 
@@ -82,16 +86,13 @@ public class NotificationService extends Service {
             public void run() {
 
                 //danger = startDetection();
-                if (danger) {
-                    result = "Danger";
-                }
 
                 //use a handler to run a toast that shows the current timestamp
                 handler.post(new Runnable() {
                     public void run() {
 
-                        //TODO CALL NOTIFICATION FUNC
-                        Toast.makeText(NotificationService.this, result, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(NotificationService.this, "Start service", Toast.LENGTH_SHORT).show();
+                        startService(new Intent(NotificationService.this, DemoCamService.class));
 
                     }
                 });

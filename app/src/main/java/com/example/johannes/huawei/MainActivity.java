@@ -21,9 +21,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /*
-* Main Activity zum Starten der Camera Activity und für Settings
+* Main Activity zum Starten der {@link Camera2Activity},
+* des {@link NotificationService} Background Services
+* und der {@link SettingsActivity}
+* Als Backup ist zusätzlich {@link TfLiteActivity} verfügbar, dazu auf das Patron Logo klicken
 *
 * */
 
@@ -73,12 +77,15 @@ public class MainActivity extends AppCompatActivity {
         buttonDetectBackground.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
+                Toast.makeText(MainActivity.this, "Background Service started. To stop please close the app in the app manager.",Toast.LENGTH_SHORT ).show();
+                // notificationService starts DemoCamService every 2 seconds
                 startService(new Intent(MainActivity.this, NotificationService.class));
-                startService(new Intent(MainActivity.this, DemoCamService.class));
+                // to start classification manually
+                //startService(new Intent(MainActivity.this, DemoCamService.class));
             }
         });
 
-        // wird auch von DetectionActivity geprueft
+        // to get permissions e.g. when newly installed
         requestPermissions();
 
     }

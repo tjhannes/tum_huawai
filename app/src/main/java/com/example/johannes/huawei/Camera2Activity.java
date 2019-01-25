@@ -13,8 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +22,7 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -53,6 +47,11 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 
+import com.example.johannes.huawei.hiai.DangermodelModel;
+import com.example.johannes.huawei.hiai.ModelManager;
+import com.example.johannes.huawei.hiai.ModelManagerListener;
+import com.example.johannes.huawei.utils.AutoFitTextureView;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -64,7 +63,14 @@ import static android.graphics.Color.green;
 import static android.graphics.Color.red;
 
 
-
+/**
+ *
+ * Activity uses the Camera2 API to show a video stream in a TextureView. Every x miliseconds,
+ * a frame from the preview stream is send to the HiAI foundation tool. With a callBack Listener
+ * the Activity waits for the result of the neural net and display  a green or red
+ * border depending on the result, additionally the best label is shown in the resultBar.
+ *
+ * */
 public class Camera2Activity extends AppCompatActivity {
 
     private static final String TAG = "Camera2Activity";
@@ -74,11 +80,11 @@ public class Camera2Activity extends AppCompatActivity {
     private static final int MAX_PREVIEW_WIDTH = 1920;
     private static final int MAX_PREVIEW_HEIGHT = 1080;
     /** This size is taken from the Camera Stream of TextureView and sent to model for classification */
-    // TODO change to our model size
+    // TODO change to our model size (getBitmap)
     static final int DIM_IMG_SIZE_X = 224;
     static final int DIM_IMG_SIZE_Y = 224;
 
-    // TODO change size
+    // TODO change size to our model size (resize for model)
     public static final int RESIZED_WIDTH = 224;
     public static final int RESIZED_HEIGHT = 224;
     // used for image preprocessing, i.e. normalization of images to (-1,1)
@@ -87,7 +93,6 @@ public class Camera2Activity extends AppCompatActivity {
     public static final double meanValueOfGreen = 127.5;
     public static final double meanValueOfRed = 127.5;
 
-    private List<ClassifyItemModel> items;
     private Bitmap show;
     private AssetManager mgr;
     private String[] labels;
@@ -96,6 +101,7 @@ public class Camera2Activity extends AppCompatActivity {
     private boolean runClassifier = false;
     private boolean checkedPermissions = false;
     private TextView textPredict;
+    private RelativeLayout container;
     private View resultBar;
 
     /** ID of the current {@link CameraDevice}. */
@@ -137,7 +143,7 @@ public class Camera2Activity extends AppCompatActivity {
                 @Override
                 public void run() {
                     if (taskId > 0) {
-                        Toast.makeText(Camera2Activity.this, "load model success. taskId is:" + taskId, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Camera2Activity.this, "load model success. taskId is:" + taskId, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(Camera2Activity.this, "load model fail. taskId is:" + taskId, Toast.LENGTH_SHORT).show();
                     }
@@ -193,7 +199,7 @@ public class Camera2Activity extends AppCompatActivity {
                 @Override
                 public void run() {
                     if (taskId > 0) {
-                        Toast.makeText(Camera2Activity.this, "unload model success. taskId is:" + taskId, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Camera2Activity.this, "unload model success. taskId is:" + taskId, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(Camera2Activity.this, "unload model fail. taskId is:" + taskId, Toast.LENGTH_SHORT).show();
                     }
@@ -375,13 +381,14 @@ public class Camera2Activity extends AppCompatActivity {
 
         textureView = (AutoFitTextureView) findViewById(R.id.texture);
         resultBar = (View) findViewById(R.id.control);
+        container = (RelativeLayout) findViewById(R.id.container);
         textPredict = (TextView) findViewById(R.id.textPredict);
         textPredict.setText("Init");
 
         /** load libhiai.so */
         boolean isSoLoadSuccess = ModelManager.init();
         if (isSoLoadSuccess) {
-            Toast.makeText(this, "load libhiai.so success.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "load libhiai.so success.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "load libhiai.so fail.", Toast.LENGTH_SHORT).show();
         }
@@ -401,13 +408,9 @@ public class Camera2Activity extends AppCompatActivity {
         Log.e(TAG, "onCreate: " + ret);
 
         // lädt das Model
-        // TODO does this load the dangermodel.cambricon? debug here
-        //ModelManager.loadModelAsync("hiai", mgr);
+        // alternativ direkt Model Manager ansprechen ModelManager.loadModelAsync("hiai", mgr);
         DangermodelModel.loadAsync(mgr);
 
-        items = new ArrayList<>();
-
-        // doppelt?
         mgr = getResources().getAssets();
 
         startBackgroundThread();
@@ -701,7 +704,7 @@ public class Camera2Activity extends AppCompatActivity {
             final float[] pixels = getPixel(initClassifiedImg, RESIZED_WIDTH, RESIZED_HEIGHT);
 
             // this is where the magic happens
-            //ModelManager.runModelAsync("hiai", pixels);
+            // ModelManager.runModelAsync("hiai", pixels);
             // instead of calling ModelManager.runModelAsync we use:
             DangermodelModel.predictAsync(pixels);
 
@@ -815,62 +818,20 @@ public class Camera2Activity extends AppCompatActivity {
         }
     }
 
-    /** Shows an error message dialog. */
-    // delete?
-    public static class ErrorDialog extends DialogFragment {
-
-        private static final String ARG_MESSAGE = "message";
-
-        public static ErrorDialog newInstance(String message) {
-            ErrorDialog dialog = new ErrorDialog();
-            Bundle args = new Bundle();
-            args.putString(ARG_MESSAGE, message);
-            dialog.setArguments(args);
-            return dialog;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Activity activity = getActivity();
-            return new AlertDialog.Builder(activity)
-                    .setMessage(getArguments().getString(ARG_MESSAGE))
-                    .setPositiveButton(
-                            android.R.string.ok,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    activity.finish();
-                                }
-                            })
-                    .create();
-        }
-    }
-
 
     /**
-     * initiert die Labels des Models aus labels.txt und gibt weiter an ModelManager.initLabels
+     * initiert die Labels des Models aus labels.txt
      */
-//    private void initLabels() {
-//        byte[] labels;
-//        try {
-//            InputStream assetsInputStream = getAssets().open("labels.txt");
-//            int available = assetsInputStream.available();
-//            labels = new byte[available];
-//            assetsInputStream.read(labels);
-//            assetsInputStream.close();
-//            ModelManager.initLabels(labels);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
     public static String[] initLabels(AssetManager mgr) {
 
         StringBuilder result = new StringBuilder();
 
         try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(mgr.open("labels.txt")));//Construct a BufferedReader class to read the file
+            //Construct a BufferedReader class to read the file
+            BufferedReader br = new BufferedReader(new InputStreamReader(mgr.open("labels.txt")));
             String s = null;
-            while((s = br.readLine())!=null){//Use the readLine method to read one line at a time
+            //Use the readLine method to read one line at a time
+            while((s = br.readLine())!=null){
                 result.append(System.lineSeparator()+s);
             }
             br.close();
@@ -906,15 +867,13 @@ public class Camera2Activity extends AppCompatActivity {
     }
 
     private void changeBorderColor(int color) {
-        // TODO refactor
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.container);
         ShapeDrawable rectShapeDrawable = new ShapeDrawable();
         // get paint and set border color, stroke and stroke width
         Paint paint = rectShapeDrawable.getPaint();
         paint.setColor(color);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(50);
-        layout.setBackground(rectShapeDrawable);
+        container.setBackground(rectShapeDrawable);
     }
 
 

@@ -18,7 +18,7 @@
     android:layout_height="match_parent"
     android:id="@+id/containerTf">
 
-    <com.example.johannes.huawei.AutoFitTextureView
+    <com.example.johannes.huawei.utils.AutoFitTextureView
         android:id="@+id/texture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,4 +1,4 @@
-package com.example.johannes.huawei;
+package com.example.johannes.huawei.hiai;
 
 public interface ModelManagerListener {
 

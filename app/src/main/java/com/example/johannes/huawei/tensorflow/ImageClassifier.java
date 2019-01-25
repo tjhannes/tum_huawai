@@ -13,9 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-package com.example.johannes.huawei;
+package com.example.johannes.huawei.tensorflow;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.os.SystemClock;
@@ -112,6 +113,19 @@ public class ImageClassifier {
         Log.d(TAG, "Created a Tensorflow Lite Image Classifier.");
     }
 
+    /** Initializes an {@code ImageClassifier}. */
+    ImageClassifier(Service service) throws IOException {
+        tflite = new Interpreter(loadModelFile(service));
+        labelList = loadLabelList(service);
+        imgData =
+                ByteBuffer.allocateDirect(
+                        4 * DIM_BATCH_SIZE * DIM_IMG_SIZE_X * DIM_IMG_SIZE_Y * DIM_PIXEL_SIZE);
+        imgData.order(ByteOrder.nativeOrder());
+        labelProbArray = new float[1][labelList.size()];
+        filterLabelProbArray = new float[FILTER_STAGES][labelList.size()];
+        Log.d(TAG, "Created a Tensorflow Lite Image Classifier.");
+    }
+
     /** Classifies a frame from the preview stream. */
     String classifyFrame(Bitmap bitmap) {
         if (tflite == null) {
@@ -177,9 +191,34 @@ public class ImageClassifier {
         return labelList;
     }
 
+    /** Reads label list from Assets. */
+    private List<String> loadLabelList(Service service) throws IOException {
+        List<String> labelList = new ArrayList<String>();
+        // TODO does this work
+        BufferedReader reader =
+                new BufferedReader(new InputStreamReader(service.getAssets().open(LABEL_PATH)));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            labelList.add(line);
+        }
+        reader.close();
+        return labelList;
+    }
+
     /** Memory-map the model file in Assets. */
     private MappedByteBuffer loadModelFile(Activity activity) throws IOException {
         AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(MODEL_PATH);
+        FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
+        FileChannel fileChannel = inputStream.getChannel();
+        long startOffset = fileDescriptor.getStartOffset();
+        long declaredLength = fileDescriptor.getDeclaredLength();
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
+    }
+
+    /** Memory-map the model file in Assets. */
+    private MappedByteBuffer loadModelFile(Service service) throws IOException {
+        // TODO does this work
+        AssetFileDescriptor fileDescriptor = service.getAssets().openFd(MODEL_PATH);
         FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
         FileChannel fileChannel = inputStream.getChannel();
         long startOffset = fileDescriptor.getStartOffset();

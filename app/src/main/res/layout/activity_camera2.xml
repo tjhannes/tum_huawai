@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.johannes.huawei.Camera2Activity">
 
-    <com.example.johannes.huawei.AutoFitTextureView
+    <com.example.johannes.huawei.utils.AutoFitTextureView
         android:id="@+id/texture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
